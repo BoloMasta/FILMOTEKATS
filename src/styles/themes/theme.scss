@@ -1,0 +1,68 @@
+// Light theme
+$light-background: #ffffff;
+$light-text: #000000;
+$light-primary: #1a73e8;
+$light-secondary: #fbbc05;
+
+$light-header-text: #ffffff;
+$light-header-background: #0000008f;
+$light-footer-text: #545454;
+$light-footer-background: #f7f7f7;
+$light-title: #000000;
+$light-accent: #ff6b01;
+$light-error: #ff001b;
+$light-background-modal: #ffffff;
+$light-modal-text: #8C8C8C;
+$light-modal-button-disabled: #b2afad;
+
+
+// Dark theme
+$dark-background: #121212;
+$dark-text: #ffffff;
+$dark-primary: #bb86fc;
+$dark-secondary: #03dac6;
+
+$dark-header-text: #ffffff;
+$dark-header-background: #000000;
+$dark-footer-text: #545454;
+$dark-footer-background: #1e1e1e;
+$dark-title: #ffffff;
+$dark-accent: #ff6b01;
+$dark-error: #ff001b;
+$dark-background-modal: #121212;
+$dark-modal-text: #8C8C8C;
+$dark-modal-button-disabled: #555555;
+
+
+
+$background: $light-background;
+$text-color: $light-text;
+$primary-color: $light-primary;
+$secondary-color: $light-secondary;
+
+$header-text: $light-header-text;
+$header-background: $light-header-background;
+$footer-text: $light-footer-text;
+$footer-background: $light-footer-background;
+$title: $light-title;
+$accent: $light-accent;
+$error: $light-error;
+$background-modal: $light-background-modal;
+$modal-text: $light-modal-text;
+$modal-button-disabled: $light-modal-button-disabled;
+
+
+
+@mixin theme-light {
+    $background: $light-background;
+    $text-color: $light-text;
+    $primary-color: $light-primary;
+    $secondary-color: $light-secondary;
+  }
+  
+  @mixin theme-dark {
+    $background: $dark-background;
+    $text-color: $dark-text;
+    $primary-color: $dark-primary;
+    $secondary-color: $dark-secondary;
+  } 
