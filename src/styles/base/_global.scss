@@ -1,0 +1,77 @@
+/* Basic settings */
+html {
+  box-sizing: border-box;
+  font-size: 16px; /* Base font size */
+  scroll-behavior: smooth; /* Smooth scrolling */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header */
+header {
+  background-color: var(--header-background);
+  color: var(--header-text);
+  padding: 1rem;
+}
+
+header h1,
+header h2,
+header h3 {
+  margin: 0;
+}
+
+/* Footer */
+footer {
+  background-color: var(--footer-background);
+  color: var(--footer-text);
+  padding: 1rem;
+  text-align: center;
+  transition: all 0.5s ease-in-out;
+}
+
+/* Buttons */
+button {
+  background-color: var(--primary-color);
+  color: var(--background);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+button:disabled {
+  background-color: var(--modal-button-disabled);
+  cursor: not-allowed;
+}
+
+/* Forms */
+input,
+textarea {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input:focus,
+textarea:focus {
+  outline: 2px solid var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+/* Modal */
+.modal {
+  background-color: var(--background-modal);
+  color: var(--modal-text);
+  border: 1px solid var(--primary-color);
+  padding: 1rem;
+  border-radius: 4px;
+}
