@@ -12,8 +12,8 @@ const Layout: React.FC = () => {
         <Suspense fallback={<Loader />}>
           <Outlet />
         </Suspense>
-        <Footer />
       </main>
+      <Footer />
     </>
   );
 };

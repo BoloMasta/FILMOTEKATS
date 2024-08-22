@@ -20,7 +20,7 @@ const HomePage: React.FC = () => {
 
   return (
     <div>
-      <h2>Popular Movies</h2>
+      <h2 className="page-header">Popular Movies</h2>
       <Gallery movies={popularMovies} />
     </div>
   );

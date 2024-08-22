@@ -1,3 +1,6 @@
+import React from "react";
+import styles from "./Button.module.scss"; // Import SCSS dla Button
+
 type ButtonProps = {
   onClick: () => void;
   label: string;
@@ -14,16 +17,16 @@ const Button: React.FC<ButtonProps> = ({
   const getButtonClass = () => {
     switch (variant) {
       case "primary":
-        return "btn-primary";
+        return styles.btnPrimary;
       case "secondary":
-        return "btn-secondary";
+        return styles.btnSecondary;
       default:
-        return "btn-primary";
+        return styles.btnPrimary;
     }
   };
 
   return (
-    <button className={`btn ${getButtonClass()}`} onClick={onClick} disabled={disabled}>
+    <button className={`${styles.btn} ${getButtonClass()}`} onClick={onClick} disabled={disabled}>
       {label}
     </button>
   );

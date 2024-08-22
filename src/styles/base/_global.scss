@@ -75,3 +75,34 @@ textarea:focus {
   padding: 1rem;
   border-radius: 4px;
 }
+
+.main-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.page-header {
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

@@ -1,3 +1,10 @@
+// Breakpoints
+$breakpoints: (
+  mobile: 320px,
+  tablet: 768px,
+  desktop: 1280px,
+);
+
 // Light theme
 $light-background: #ffffff;
 $light-text: #000000;

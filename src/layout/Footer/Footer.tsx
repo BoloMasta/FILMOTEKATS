@@ -1,11 +1,13 @@
-import React from "react"
+import styles from "./Footer.module.scss";
 
 const Footer: React.FC = () => {
-    return (
-        <footer>
-            <p>Copyright © 2023 Filmoteka. All rights reserved.</p>
-        </footer>
-    )
-}
+  return (
+    <footer className={styles.footer}>
+      <div className={styles.footerContent}>
+        <p>Copyright © 2023 Filmoteka. All rights reserved.</p>
+      </div>
+    </footer>
+  );
+};
 
-export default Footer
+export default Footer;
