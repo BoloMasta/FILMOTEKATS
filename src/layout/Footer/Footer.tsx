@@ -1,3 +1,4 @@
+import SVG from "react-inlinesvg";
 import styles from "./Footer.module.scss";
 
 const Footer: React.FC = () => {
@@ -5,6 +6,13 @@ const Footer: React.FC = () => {
     <footer className={styles.footer}>
       <div className={styles.footerContent}>
         <p>Copyright © 2023 Filmoteka. All rights reserved.</p>
+        <p>
+          Projekt i wykonanie:
+          <a href="https://github.com/BoloMasta" target="_blank" rel="noopener noreferrer">
+            <SVG src="/images/icons/github-icon.svg" className={styles.footerIcon} />
+            BoloMasta
+          </a>
+        </p>
       </div>
     </footer>
   );

@@ -1,0 +1,24 @@
+.logoContainer {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+
+  .icon {
+    margin-right: 5px;
+    width: 40px;
+    height: auto;
+  }
+
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+}

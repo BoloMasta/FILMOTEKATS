@@ -1,0 +1,25 @@
+.navigation {
+  margin-left: 40px;
+}
+
+.navigationList {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navigationItem {
+  margin-right: 20px;
+}
+
+.link {
+  text-decoration: none;
+  color: inherit;
+  font-weight: normal;
+  transition: color 0.3s;
+
+  &.active {
+    font-weight: bold;
+  }
+}

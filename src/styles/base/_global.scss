@@ -67,13 +67,23 @@ textarea:focus {
   border-color: var(--primary-color);
 }
 
-/* Modal */
-.modal {
-  background-color: var(--background-modal);
-  color: var(--modal-text);
-  border: 1px solid var(--primary-color);
-  padding: 1rem;
-  border-radius: 4px;
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-modal);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
 }
 
 .main-container {
@@ -86,23 +96,4 @@ textarea:focus {
   padding: 0.5rem;
   border-bottom: 1px solid var(--primary-color);
   margin-bottom: 1rem;
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 12px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
 }

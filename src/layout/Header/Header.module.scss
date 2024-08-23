@@ -1,0 +1,29 @@
+.header {
+  background-color: var(--header-background);
+  color: var(--header-text);
+  padding: 20px 0;
+  border-bottom: 1px solid var(--text-color);
+
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    flex-wrap: nowrap;
+    flex-direction: column;
+
+    @include breakpoint("tablet") {
+      padding: 1.5rem;
+      max-width: 80%;
+      flex-direction: row;
+      gap: 16px;
+    }
+
+    @include breakpoint("desktop") {
+      padding: 2rem;
+      max-width: 70%;
+    }
+  }
+}
