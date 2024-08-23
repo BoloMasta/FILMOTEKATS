@@ -4,6 +4,7 @@ import styles from "./Button.module.scss"; // Import SCSS dla Button
 type ButtonProps = {
   onClick: () => void;
   label: string;
+  className?: string;
   disabled?: boolean;
   variant?: "primary" | "secondary";
 };
@@ -11,6 +12,7 @@ type ButtonProps = {
 const Button: React.FC<ButtonProps> = ({
   onClick,
   label,
+  className,
   disabled = false,
   variant = "primary",
 }) => {
@@ -26,7 +28,7 @@ const Button: React.FC<ButtonProps> = ({
   };
 
   return (
-    <button className={`${styles.btn} ${getButtonClass()}`} onClick={onClick} disabled={disabled}>
+    <button className={`${styles.btn} ${getButtonClass()} ${className}`} onClick={onClick} disabled={disabled}>
       {label}
     </button>
   );

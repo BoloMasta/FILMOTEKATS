@@ -1,6 +1,5 @@
-// Pagination.tsx
 import Button from '../../components/Button/Button';
-import styles from './Pagination.module.scss'; // Import stylów dla Pagination
+import styles from './Pagination.module.scss'; 
 
 type PaginationProps = {
   currentPage: number;
@@ -9,7 +8,7 @@ type PaginationProps = {
 };
 
 const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
-  const maxVisibleButtons = 4; // Ilość widocznych przycisków
+  const maxVisibleButtons = 4; 
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -20,7 +19,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
   const renderPaginationButtons = () => {
     const buttons = [];
 
-    // Zawsze pokazujemy przycisk dla pierwszej strony
+    // First button
     buttons.push(
       <Button
         key={1}
@@ -32,7 +31,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
       />
     );
 
-    // Separator przed stronami środkowymi, jeśli trzeba
+    // Separator
     if (currentPage > maxVisibleButtons + 2 && totalPages > maxVisibleButtons + 1) {
       buttons.push(
         <span key="start-ellipsis" className={styles.paginationEllipsis}>
@@ -41,7 +40,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
       );
     }
 
-    // Wyświetlanie środkowych stron
+    // Middle buttons
     const startPage = Math.max(2, currentPage - maxVisibleButtons);
     const endPage = Math.min(totalPages - 1, currentPage + maxVisibleButtons);
 
@@ -60,7 +59,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
       );
     }
 
-    // Separator po stronach środkowych, jeśli trzeba
+    // Separator
     if (currentPage < totalPages - maxVisibleButtons - 1 && totalPages > maxVisibleButtons + 1) {
       buttons.push(
         <span key="end-ellipsis" className={styles.paginationEllipsis}>
@@ -69,7 +68,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
       );
     }
 
-    // Zawsze pokazujemy przycisk dla ostatniej strony
+    // Last button
     if (totalPages > 1) {
       buttons.push(
         <Button

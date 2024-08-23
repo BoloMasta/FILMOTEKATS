@@ -7,6 +7,7 @@ export interface Movie {
   genre_ids: number[];
   vote_average: number;
   vote_count: number;
+  adult: boolean;
 }
 
 export interface Genre {

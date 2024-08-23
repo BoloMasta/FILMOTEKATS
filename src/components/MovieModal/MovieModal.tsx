@@ -1,7 +1,15 @@
+import SVG from "react-inlinesvg";
 import { Movie } from "../../ts/types/Movie";
+import { useEffect, useState } from "react";
 import styles from "./MovieModal.module.scss";
 import Button from "../Button/Button";
-import React, { useEffect } from "react";
+import React from "react";
+import { FetchApiMovies } from "../../ts/api/fetchMovies"; // Import klasy FetchApiMovies
+
+interface Genre {
+  id: number;
+  name: string;
+}
 
 interface MovieModalProps {
   movie: Movie;
@@ -16,6 +24,25 @@ const MovieModal: React.FC<MovieModalProps> = ({
   onAddToQueue,
   onAddToWatched,
 }) => {
+  const [genres, setGenres] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchGenres = async () => {
+      const api = new FetchApiMovies();
+      const genresListResponse = await api.getGenresIdsList();
+
+      if (genresListResponse && genresListResponse.genres) {
+        const movieGenres = movie.genre_ids.map((genreId) => {
+          const genre = genresListResponse.genres.find((g: Genre) => g.id === genreId);
+          return genre ? genre.name : "Unknown";
+        });
+        setGenres(movieGenres);
+      }
+    };
+
+    fetchGenres();
+  }, [movie.genre_ids]);
+
   const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (event.target === event.currentTarget) {
       onClose();
@@ -54,12 +81,24 @@ const MovieModal: React.FC<MovieModalProps> = ({
               className={styles.moviePoster}
             />
           )}
+
           <div className={styles.movieInfo}>
-            <h2 className={styles.movieTitle}>{movie.title}</h2>
+            <h2 className={styles.movieTitle}>
+              {movie.title}
+              {movie.adult && (
+                <SVG src="/images/icons/18-icon.svg" className={styles.adultIcon} />
+              )}
+            </h2>
+            {genres.length > 0 && (
+              <p className={styles.movieGenres}>
+                Genres: {genres.join(", ")}
+              </p>
+            )}
             <p className={styles.movieOverview}>{movie.overview}</p>
             <p className={styles.movieReleaseDate}>Release Date: {movie.release_date}</p>
             <p className={styles.movieVoteAverage}>Rating: {movie.vote_average.toFixed(1)}</p>
             <p className={styles.movieVoteCount}>Votes: {movie.vote_count}</p>
+
             <div className={styles.buttonContainer}>
               <Button onClick={() => onAddToQueue(movie)} label="Add to Queue" variant="primary" />
               <Button
