@@ -1,6 +1,7 @@
 import { Movie } from "../../ts/types/Movie";
 import styles from "./MovieModal.module.scss";
 import Button from "../Button/Button";
+import React, { useEffect } from "react";
 
 interface MovieModalProps {
   movie: Movie;
@@ -15,8 +16,26 @@ const MovieModal: React.FC<MovieModalProps> = ({
   onAddToQueue,
   onAddToWatched,
 }) => {
+  const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (event.target === event.currentTarget) {
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onClose]);
+
   return (
-    <div className={styles.modalOverlay}>
+    <div className={styles.modalOverlay} onClick={handleOverlayClick}>
       <div className={styles.modalContent}>
         <button className={styles.closeButton} onClick={onClose}>
           X

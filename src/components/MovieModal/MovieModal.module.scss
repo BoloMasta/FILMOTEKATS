@@ -4,7 +4,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,6 +19,7 @@
   display: flex;
   flex-direction: column;
   position: relative;
+  border: 2px solid var(--primary-color);
 
   @include breakpoint("tablet") {
     padding: 1.5rem;
@@ -144,6 +145,6 @@
   }
 
   button {
-    flex: 1; // Przyciski mają te same rozmiary
+    flex: 1;
   }
 }
