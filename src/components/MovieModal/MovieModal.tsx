@@ -3,7 +3,7 @@ import { Movie } from "../../ts/types/Movie";
 import { useEffect, useState } from "react";
 import styles from "./MovieModal.module.scss";
 import Button from "../Button/Button";
-import React from "react";
+import noPoster from "../../images/no-poster.jpg";
 import { FetchApiMovies } from "../../ts/api/fetchMovies"; // Import klasy FetchApiMovies
 
 interface Genre {
@@ -68,19 +68,16 @@ const MovieModal: React.FC<MovieModalProps> = ({
           X
         </button>
         <div className={styles.movieDetails}>
-          {movie.poster_path ? (
-            <img
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              alt={movie.title}
-              className={styles.moviePoster}
-            />
-          ) : (
-            <img
-              src="/images/no-poster.jpg"
-              alt="No Poster Available"
-              className={styles.moviePoster}
-            />
-          )}
+
+        <img
+            src={
+                  movie.poster_path
+                    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                    : noPoster
+                }
+                alt={movie.title}
+                className={styles.moviePoster}
+              />
 
           <div className={styles.movieInfo}>
             <h2 className={styles.movieTitle}>
