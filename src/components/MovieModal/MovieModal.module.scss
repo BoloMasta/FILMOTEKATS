@@ -134,7 +134,8 @@
 
 .movieReleaseDate,
 .movieVoteAverage,
-.movieVoteCount {
+.movieVoteCount,
+.movieLanguages  {
   font-size: 0.75rem;
   color: var(--text-color);
   margin-bottom: 0.5rem;
@@ -147,6 +148,8 @@
     font-size: 1rem;
   }
 }
+
+
 
 .buttonContainer {
   display: flex;

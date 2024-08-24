@@ -19,15 +19,7 @@ const Gallery: React.FC<GalleryProps> = ({ movies }) => {
     setSelectedMovie(null);
   };
 
-  const handleAddToQueue = (movie: Movie) => {
-    console.log("Added to queue:", movie);
-    // Implement your logic here
-  };
 
-  const handleAddToWatched = (movie: Movie) => {
-    console.log("Added to watched:", movie);
-    // Implement your logic here
-  };
 
   return (
     <div>
@@ -59,8 +51,7 @@ const Gallery: React.FC<GalleryProps> = ({ movies }) => {
         <MovieModal
           movie={selectedMovie}
           onClose={handleCloseModal}
-          onAddToQueue={handleAddToQueue}
-          onAddToWatched={handleAddToWatched}
+
         />
       )}
     </div>

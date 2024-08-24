@@ -1,47 +1,58 @@
+import React from 'react';
 import SVG from "react-inlinesvg";
-import { Movie } from "../../ts/types/Movie";
+import { Movie, MovieDetails } from "../../ts/types/Movie";
 import { useEffect, useState } from "react";
 import styles from "./MovieModal.module.scss";
 import Button from "../Button/Button";
+import { addToQueue, addToWatched } from './../../utils/storageUtils'; 
 import noPoster from "../../images/no-poster.jpg";
-import { FetchApiMovies } from "../../ts/api/fetchMovies"; // Import klasy FetchApiMovies
-
-interface Genre {
-  id: number;
-  name: string;
-}
+import { FetchApiMovies } from "../../ts/api/fetchMovies";
+import { useStore } from "../../utils/store";
 
 interface MovieModalProps {
   movie: Movie;
   onClose: () => void;
-  onAddToQueue: (movie: Movie) => void;
-  onAddToWatched: (movie: Movie) => void;
 }
 
 const MovieModal: React.FC<MovieModalProps> = ({
   movie,
   onClose,
-  onAddToQueue,
-  onAddToWatched,
 }) => {
-  const [genres, setGenres] = useState<string[]>([]);
+  const { genres, fetchGenres } = useStore();
+  const [movieDetails, setMovieDetails] = useState<MovieDetails | null>(null);
+  const [movieGenres, setMovieGenres] = useState<string[]>([]);
 
   useEffect(() => {
-    const fetchGenres = async () => {
+    const fetchMovieDetails = async () => {
       const api = new FetchApiMovies();
-      const genresListResponse = await api.getGenresIdsList();
-
-      if (genresListResponse && genresListResponse.genres) {
-        const movieGenres = movie.genre_ids.map((genreId) => {
-          const genre = genresListResponse.genres.find((g: Genre) => g.id === genreId);
-          return genre ? genre.name : "Unknown";
-        });
-        setGenres(movieGenres);
+      try {
+        const details = await api.getMovieDetails(movie.id);
+        if (details) {
+          setMovieDetails(details);
+        } else {
+          setMovieDetails(null);
+        }
+      } catch (error) {
+        console.error('Failed to fetch movie details:', error);
+        setMovieDetails(null);
       }
     };
 
-    fetchGenres();
-  }, [movie.genre_ids]);
+    fetchMovieDetails();
+  }, [movie.id]);
+
+  useEffect(() => {
+    if (genres.length === 0) {
+      fetchGenres();
+    }
+  }, [fetchGenres, genres.length]);
+
+  useEffect(() => {
+    if (movieDetails) {
+      const genreNames = movieDetails.genres.map((genre) => genre.name);
+      setMovieGenres(genreNames);
+    }
+  }, [movieDetails, genres]);
 
   const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (event.target === event.currentTarget) {
@@ -51,15 +62,25 @@ const MovieModal: React.FC<MovieModalProps> = ({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         onClose();
       }
     };
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [onClose]);
+
+  const onAddToQueue = (movie: Movie) => {
+    addToQueue(movie); 
+  };
+
+  const onAddToWatched = (movie: Movie) => {
+    addToWatched(movie); 
+  };
+
+  if (!movieDetails) return null;
 
   return (
     <div className={styles.modalOverlay} onClick={handleOverlayClick}>
@@ -68,33 +89,38 @@ const MovieModal: React.FC<MovieModalProps> = ({
           X
         </button>
         <div className={styles.movieDetails}>
-
-        <img
+          <img
             src={
-                  movie.poster_path
-                    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                    : noPoster
-                }
-                alt={movie.title}
-                className={styles.moviePoster}
-              />
+              movieDetails.poster_path
+                ? `https://image.tmdb.org/t/p/w500${movieDetails.poster_path}`
+                : noPoster
+            }
+            alt={movieDetails.title}
+            className={styles.moviePoster}
+          />
 
           <div className={styles.movieInfo}>
             <h2 className={styles.movieTitle}>
-              {movie.title}
-              {movie.adult && (
+              {movieDetails.title}
+              {movieDetails.adult && (
                 <SVG src="/images/icons/18-icon.svg" className={styles.adultIcon} />
               )}
             </h2>
-            {genres.length > 0 && (
+            {movieGenres.length > 0 && (
               <p className={styles.movieGenres}>
-                Genres: {genres.join(", ")}
+                Genres: {movieGenres.join(", ")}
               </p>
             )}
-            <p className={styles.movieOverview}>{movie.overview}</p>
-            <p className={styles.movieReleaseDate}>Release Date: {movie.release_date}</p>
-            <p className={styles.movieVoteAverage}>Rating: {movie.vote_average.toFixed(1)}</p>
-            <p className={styles.movieVoteCount}>Votes: {movie.vote_count}</p>
+            <p className={styles.movieOverview}>{movieDetails.overview}</p>
+            <p className={styles.movieReleaseDate}>Release Date: {movieDetails.release_date}</p>
+            <p className={styles.movieVoteAverage}>Rating: {movieDetails.vote_average.toFixed(1)}</p>
+            <p className={styles.movieVoteCount}>Votes: {movieDetails.vote_count}</p>
+
+            {movieDetails.spoken_languages.length > 0 && (
+              <p className={styles.movieLanguages}>
+                Spoken Languages: {movieDetails.spoken_languages.map(lang => lang.english_name).join(', ')}
+              </p>
+            )}
 
             <div className={styles.buttonContainer}>
               <Button onClick={() => onAddToQueue(movie)} label="Add to Queue" variant="primary" />

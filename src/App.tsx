@@ -26,6 +26,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
+          <Route path="search/:query" element={<HomePage />} />
           <Route path="library" element={<LibraryPage />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Route>

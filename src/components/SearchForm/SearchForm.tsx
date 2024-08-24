@@ -1,32 +1,38 @@
-import React, { useState } from "react";
-import SVG from "react-inlinesvg";
-import styles from "./SearchForm.module.scss";
-import { FetchApiMovies } from "../../ts/api/fetchMovies";
-import { Movie } from "../../ts/types/Movie";
+import React, { useState, useEffect } from 'react';
+import SVG from 'react-inlinesvg';
+import styles from './SearchForm.module.scss';
+import { useSearchParams } from 'react-router-dom';
 
-interface SearchFormProps {
-  onSearchResults: (movies: Movie[]) => void;
-}
+const SearchForm: React.FC = () => {
+  const [query, setQuery] = useState<string>('');
+  const [searchError, setSearchError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-const SearchForm: React.FC<SearchFormProps> = ({ onSearchResults }) => {
-  const [query, setQuery] = useState<string>("");
-  const [searchError, setSearchError] = useState<string>("");
+  useEffect(() => {
+    const urlQuery = searchParams.get('query');
+    if (!urlQuery) {
+      setQuery('');
+    }
+  }, [searchParams]);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     if (!query) {
-      setSearchError("Please enter a search term.");
+      setSearchError('Please enter a search term.');
       return;
     }
 
-    const api = new FetchApiMovies();
-    const data = await api.getSearch(query, 1); // Fetching the first page
-    if (data && data.results.length > 0) {
-      onSearchResults(data.results);
-      setSearchError("");
-    } else {
-      setSearchError("No results found. Please try again.");
-      onSearchResults([]);
+    setLoading(true);
+    setSearchError('');
+
+    try {
+      setSearchParams({ query });
+    } catch (error) {
+      setSearchError('An error occurred while setting the search query.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -41,13 +47,15 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearchResults }) => {
             className={styles.formInput}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            disabled={loading}
           />
         </label>
-        <button className={styles.formBtn} type="submit">
+        <button className={styles.formBtn} type="submit" disabled={loading}>
           <SVG src="/images/icons/search-icon.svg" className={styles.formBtnIcon} />
         </button>
         {searchError && <div className={styles.searchError}>{searchError}</div>}
       </form>
+      {loading && <div className={styles.loading}>Loading...</div>}
     </div>
   );
 };
