@@ -17,3 +17,16 @@
 //   -webkit-font-smoothing: antialiased;
 //   -moz-osx-font-smoothing: grayscale;
 // }
+
+
+.main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+.page-header {
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--primary-color);
+    margin-bottom: 1rem;
+  }

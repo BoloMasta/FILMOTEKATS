@@ -3,7 +3,7 @@ import { FetchApiMovies } from "../../ts/api/fetchMovies";
 import { Movie } from "../../ts/types/Movie";
 import Gallery from "../../components/Gallery/Gallery";
 import Pagination from "../../components/Pagination/Pagination";
-import SearchForm from "../../components/SearchForm/SearchForm"; // Import SearchForm
+
 
 const HomePage: React.FC = () => {
   const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
@@ -41,10 +41,20 @@ const HomePage: React.FC = () => {
     setCurrentPage(1); // Reset to the first page of search results
   };
 
+    
+  const pageHeaderStyle = {
+    padding: "0.5rem",
+    borderBottom: "1px solid var(--primary-color)",
+    marginBottom: "1rem",
+  };
+      
+  
+
+
   return (
     <div>
-      <h2 className="page-header">Popular Movies</h2>
-      <SearchForm onSearchResults={handleSearchResults} />
+      <h2 className="page-header" style={pageHeaderStyle} >Popular Movies</h2>
+
       <Gallery movies={searchResults || popularMovies} />
       {searchResults ? null : (
         <Pagination

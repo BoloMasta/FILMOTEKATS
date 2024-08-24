@@ -1,0 +1,34 @@
+.loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px; 
+    height: 60px;
+    position: relative;
+    overflow: hidden; 
+    margin: 20px auto;
+}
+
+.loaderIconWrapper {
+    position: absolute;
+    top: -60px; 
+    width: 60px;
+    height: 120px; 
+    display: flex;
+    flex-direction: column;
+    animation: scrollTape 0.5s linear infinite; 
+}
+
+.loaderIcon {
+    width: 60px;
+    height: 60px;
+}
+
+@keyframes scrollTape {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(60px); 
+    }
+}

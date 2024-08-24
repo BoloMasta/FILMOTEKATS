@@ -3,6 +3,7 @@
   align-items: center;
   text-decoration: none;
   color: inherit;
+  
 }
 
 .logo {
@@ -10,15 +11,57 @@
   align-items: center;
   text-decoration: none;
   color: inherit;
+  position: relative;
+  overflow: hidden; 
+   -webkit-box-reflect: below 5px linear-gradient(transparent, blue);
 
-  .icon {
+
+
+  .logoIconWrapper {
+    position: absolute;
+    top: -40px; 
+    width: 40px;
+    height: 80px; 
+    display: flex;
+    flex-direction: column;
+    animation: scrollTape 0.6s linear infinite; 
+    animation-play-state: paused;
+
+    
+    
+
+    &:hover {
+      animation-play-state: running;
+    }
+  }
+
+  .logoIcon {
     margin-right: 5px;
     width: 40px;
     height: auto;
+    
+
+    path {
+      stroke: var(--header-text);
+    }
   }
 
   .title {
     font-size: 24px;
     font-weight: bold;
+    margin-left: 50px;
+  }
+}
+
+
+
+
+
+@keyframes scrollTape {
+  0% {
+      transform: translateY(0);
+  }
+  100% {
+      transform: translateY(40px); 
   }
 }
