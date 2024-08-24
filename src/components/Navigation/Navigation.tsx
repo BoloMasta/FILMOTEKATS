@@ -1,19 +1,31 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import styles from "./Navigation.module.scss";
 
 const Navigation: React.FC = () => (
   <nav className={styles.navigation}>
     <ul className={styles.navigationList}>
       <li className={styles.navigationItem}>
-        <Link className={styles.activeLink} to="/">
+        <NavLink
+          to="/"
+          style={{ textDecoration: 'none' }}
+          className={({ isActive }) =>
+            isActive ? styles.activeLink : styles.link
+          }
+        >
           Home
-        </Link>
+        </NavLink>
       </li>
       <li className={styles.navigationItem}>
-        <Link className={styles.link} to="/library">
+        <NavLink
+          to="/library"
+          style={{ textDecoration: 'none' }}
+          className={({ isActive }) =>
+            isActive ? styles.activeLink : styles.link
+          }
+        >
           My Library
-        </Link>
+        </NavLink>
       </li>
     </ul>
   </nav>
