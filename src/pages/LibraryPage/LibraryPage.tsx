@@ -1,24 +1,26 @@
-import { useEffect, useState } from "react";
-import { getQueue } from "../../utils/storageUtils";
-import { Movie } from "../../ts/types/Movie";
+import { useEffect } from "react";
+import { useStore } from "../../utils/store";
 import Gallery from "../../components/Gallery/Gallery";
-import styles from "./LibraryPage.module.scss"; // Importuj moduł SCSS
+import styles from "./LibraryPage.module.scss";
 
 const LibraryPage: React.FC = () => {
-  const [queueMovies, setQueueMovies] = useState<Movie[]>([]);
+  const { view, movies, loadMovies } = useStore(state => ({
+    view: state.view,
+    movies: state.movies,
+    loadMovies: state.loadMovies
+  }));
 
   useEffect(() => {
-    const storedQueue = getQueue();
-    setQueueMovies(storedQueue);
-  }, []);
+    loadMovies();
+  }, [view, loadMovies]);
 
   return (
     <div className={styles.pageContainer}>
-      <h2 className={styles.pageHeader}> {/* Użyj klasy z modułu SCSS */}
-        Movie Queue
+      <h2 className={styles.pageHeader}>
+        {view === 'queue' ? 'Movie Queue' : 'Watched Movies'}
       </h2>
-      <div className={styles.galleryContainer}> {/* Opcjonalnie, jeśli chcesz otoczyć Gallery */}
-        <Gallery movies={queueMovies} />
+      <div className={styles.galleryContainer}>
+        <Gallery movies={movies} />
       </div>
     </div>
   );

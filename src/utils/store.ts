@@ -1,6 +1,7 @@
-// src/store.ts
-import create from 'zustand';
+import { create } from 'zustand';
 import { FetchApiMovies } from './../ts/api/fetchMovies';
+import { Movie } from './../ts/types/Movie';
+import { getQueue, getWatched } from './../utils/storageUtils';
 
 interface Genre {
   id: number;
@@ -9,19 +10,37 @@ interface Genre {
 
 interface Store {
   genres: Genre[];
+  view: 'queue' | 'watched' | null;
+  movies: Movie[];
   fetchGenres: () => Promise<void>;
+  setView: (view: 'queue' | 'watched' | null) => void;
+  loadMovies: () => void;
 }
 
-export const useStore = create<Store>((set) => ({
+export const useStore = create<Store>((set, get) => ({
   genres: [],
+  view: null,
+  movies: [],
   fetchGenres: async () => {
-    // Pobierz dane z API
     const api = new FetchApiMovies();
     const genresListResponse = await api.getGenresIdsList();
     if (genresListResponse && genresListResponse.genres) {
       set({ genres: genresListResponse.genres });
-      // Możesz również zapisać dane w localStorage, jeśli chcesz
       localStorage.setItem('genres', JSON.stringify(genresListResponse.genres));
     }
   },
+  setView: (view) => {
+    set({ view });
+    get().loadMovies(); // Load movies whenever the view changes
+  },
+  loadMovies: () => {
+    const view = get().view;
+    let movies: Movie[] = [];
+    if (view === 'queue') {
+      movies = getQueue();
+    } else if (view === 'watched') {
+      movies = getWatched();
+    }
+    set({ movies });
+  }
 }));
