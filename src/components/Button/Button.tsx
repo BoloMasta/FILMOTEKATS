@@ -3,11 +3,7 @@ import styles from "./Button.module.scss";
 type ButtonProps = {
   onClick: () => void;
   label: string;
-<<<<<<< Updated upstream
   className?: string;
-=======
-  className: string;
->>>>>>> Stashed changes
   disabled?: boolean;
   variant?: "primary" | "secondary" | "tertiary";
 };
@@ -15,11 +11,7 @@ type ButtonProps = {
 const Button: React.FC<ButtonProps> = ({
   onClick,
   label,
-<<<<<<< Updated upstream
   className,
-=======
-  className = "",
->>>>>>> Stashed changes
   disabled = false,
   variant = "primary",
 }) => {
@@ -37,15 +29,11 @@ const Button: React.FC<ButtonProps> = ({
   };
 
   return (
-<<<<<<< Updated upstream
     <button
       className={`${styles.btn} ${getButtonClass()} ${className}`}
       onClick={onClick}
       disabled={disabled}
     >
-=======
-    <button className={`${styles.btn} ${getButtonClass()} ${className}`} onClick={onClick} disabled={disabled}>
->>>>>>> Stashed changes
       {label}
     </button>
   );

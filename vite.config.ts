@@ -7,7 +7,7 @@ export default ({ mode }: { mode: string }): UserConfig => {
 
   return defineConfig({
     plugins: [react()],
-    base: "/FILMOTEKATS/"
+    base: "/FILMOTEKATS/",
     css: {
       modules: {
         localsConvention: "camelCaseOnly",
