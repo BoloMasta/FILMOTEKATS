@@ -1,11 +1,11 @@
-import styles from "./Button.module.scss"; // Import SCSS dla Button
+import styles from "./Button.module.scss";
 
 type ButtonProps = {
   onClick: () => void;
   label: string;
   className?: string;
   disabled?: boolean;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "tertiary";
 };
 
 const Button: React.FC<ButtonProps> = ({
@@ -21,13 +21,19 @@ const Button: React.FC<ButtonProps> = ({
         return styles.btnPrimary;
       case "secondary":
         return styles.btnSecondary;
+      case "tertiary":
+        return styles.btnTertiary;
       default:
         return styles.btnPrimary;
     }
   };
 
   return (
-    <button className={`${styles.btn} ${getButtonClass()} ${className}`} onClick={onClick} disabled={disabled}>
+    <button
+      className={`${styles.btn} ${getButtonClass()} ${className}`}
+      onClick={onClick}
+      disabled={disabled}
+    >
       {label}
     </button>
   );

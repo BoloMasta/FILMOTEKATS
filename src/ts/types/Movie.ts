@@ -37,6 +37,9 @@ export interface MovieDetails {
   video: boolean;
   vote_average: number;
   vote_count: number;
+  budget: number;
+  runtime: number | null;
+  imdb_id: string | null;
   genres: Genre[];
   spoken_languages: Language[];
 }

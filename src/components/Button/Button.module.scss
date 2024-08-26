@@ -34,3 +34,18 @@
     cursor: not-allowed;
   }
 }
+
+.btnTertiary {
+  background-color: var(--tertiary-color);
+  color: var(--text-color);
+
+  &:hover {
+    background-color: var(--tertiary-hover);
+    color: var(--background);
+  }
+
+  &:disabled {
+    background-color: var(--modal-button-disabled);
+    cursor: not-allowed;
+  }
+}
