@@ -1,11 +1,13 @@
 .themeSwitch {
   display: flex;
+  flex-direction: column;
   align-items: center;
 }
 
 .themeLabel {
-  margin-right: 10px;
+  margin-bottom: 8px; /* Zmniejsz margines pod tekstem */
   color: var(--text-color);
+  font-size: 14px; /* Dostosuj rozmiar czcionki */
 }
 
 .themeSwitchContainer {
@@ -34,11 +36,11 @@
     &:before {
       position: absolute;
       content: "";
-      height: 12px;
-      width: 12px;
+      height: 14px; /* Można zwiększyć wysokość dla lepszej widoczności */
+      width: 14px;
       border-radius: 50%;
-      left: 4px;
-      bottom: 4px;
+      left: 3px; /* Dostosuj położenie suwaka */
+      bottom: 3px;
       background-color: var(--background);
       transition: 0.4s;
     }
@@ -49,6 +51,6 @@
   }
 
   input:checked + .slider:before {
-    transform: translateX(14px);
+    transform: translateX(14px); /* Dostosuj przesunięcie suwaka */
   }
 }

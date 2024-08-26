@@ -10,10 +10,9 @@ $light-background: #ffffff;
 $light-text: #000000;
 $light-primary: #1a73e8;
 $light-secondary: #fbbc05;
-$light-tertiary: #e0e0e0; // Dodajemy zmienną dla light-tertiary
-$light-tertiary-hover: #d4d4d4; // Dodajemy zmienną dla light-tertiary w stanie hover
+$light-tertiary: #e0e0e0;
 $light-header-text: #ffffff;
-$light-header-background: #0000008f;
+$light-header-background: #5c5c5c;
 $light-footer-text: #545454;
 $light-footer-background: #f7f7f7;
 $light-title: #000000;
@@ -28,8 +27,7 @@ $dark-background: #121212;
 $dark-text: #ffffff;
 $dark-primary: #bb86fc;
 $dark-secondary: #03dac6;
-$dark-tertiary: #333333; // Dodajemy zmienną dla dark-tertiary
-$dark-tertiary-hover: #444444; // Dodajemy zmienną dla dark-tertiary w stanie hover
+$dark-tertiary: #333333;
 $dark-header-text: #ffffff;
 $dark-header-background: #000000;
 $dark-footer-text: #545454;
@@ -46,8 +44,7 @@ $dark-modal-button-disabled: #555555;
   --text-color: #{$light-text};
   --primary-color: #{$light-primary};
   --secondary-color: #{$light-secondary};
-  --tertiary-color: #{$light-tertiary}; // Użycie zmiennej dla light-tertiary
-  --tertiary-hover: #{$light-tertiary-hover}; // Użycie zmiennej dla light-tertiary w stanie hover
+  --tertiary-color: #{$light-tertiary};
   --header-text: #{$light-header-text};
   --header-background: #{$light-header-background};
   --footer-text: #{$light-footer-text};
@@ -65,8 +62,7 @@ $dark-modal-button-disabled: #555555;
   --text-color: #{$dark-text};
   --primary-color: #{$dark-primary};
   --secondary-color: #{$dark-secondary};
-  --tertiary-color: #{$dark-tertiary}; // Użycie zmiennej dla dark-tertiary
-  --tertiary-hover: #{$dark-tertiary-hover}; // Użycie zmiennej dla dark-tertiary w stanie hover
+  --tertiary-color: #{$dark-tertiary};
   --header-text: #{$dark-header-text};
   --header-background: #{$dark-header-background};
   --footer-text: #{$dark-footer-text};

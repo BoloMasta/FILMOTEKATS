@@ -1,6 +1,7 @@
 .navigation {
   background: var(--header-background);
   padding: 1rem;
+  border-radius: 10px;
 }
 
 .navigationList {
@@ -13,6 +14,31 @@
 
 .navigationItem {
   margin: 0 1rem;
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  &:not(:first-child) {
+    margin-left: 1rem;
+    position: relative;
+
+    &:before {
+      content: "";
+      position: absolute;
+      left: -1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 100%;
+      background: var(--text-color);
+      opacity: 0.3;
+    }
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
 }
 
 .link {
@@ -21,25 +47,8 @@
   position: relative;
   transition: color 0.3s ease;
 
-  &:hover,
-  &:focus,
-  &.activeLink {
-    color: var(--primary-color);
-  }
-
-  &.activeLink::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -4px;
-    width: 100%;
-    height: 2px;
-    background: var(--primary-color);
-    transition: width 0.3s ease;
-  }
-
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     bottom: -4px;
@@ -52,4 +61,10 @@
   &:hover::after {
     width: 100%;
   }
+}
+
+.activeLink {
+  color: var(--title);
+  background: var(--primary-color);
+  border-radius: 5px;
 }

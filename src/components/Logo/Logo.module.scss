@@ -3,30 +3,29 @@
   align-items: center;
   text-decoration: none;
   color: inherit;
-  
-}
 
-.logo {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-  position: relative;
-  overflow: hidden; 
+  // -webkit-box-reflect: below 0 linear-gradient(transparent, white);
 
+  .logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+
+    -webkit-box-reflect: below 0 linear-gradient(transparent, white);
+  }
 
   .logoIconWrapper {
     position: absolute;
-    top: -40px; 
+    top: -40px;
     width: 40px;
-    height: 80px; 
+    height: 80px;
     display: flex;
     flex-direction: column;
-    animation: scrollTape 0.6s linear infinite; 
+    animation: scrollTape 0.6s linear infinite;
     animation-play-state: paused;
-
-    
-    
 
     &:hover {
       animation-play-state: running;
@@ -37,7 +36,6 @@
     margin-right: 5px;
     width: 40px;
     height: auto;
-    
 
     path {
       stroke: var(--header-text);
@@ -51,15 +49,11 @@
   }
 }
 
-
-
-
-
 @keyframes scrollTape {
   0% {
-      transform: translateY(0);
+    transform: translateY(0);
   }
   100% {
-      transform: translateY(40px); 
+    transform: translateY(40px);
   }
 }

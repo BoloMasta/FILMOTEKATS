@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import SVG from 'react-inlinesvg';
-import styles from './SearchForm.module.scss';
-import { useSearchParams } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import SVG from "react-inlinesvg";
+import styles from "./SearchForm.module.scss";
+import { useSearchParams } from "react-router-dom";
 
 const SearchForm: React.FC = () => {
-  const [query, setQuery] = useState<string>('');
-  const [searchError, setSearchError] = useState<string>('');
+  const [query, setQuery] = useState<string>("");
+  const [searchError, setSearchError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    const urlQuery = searchParams.get('query');
+    const urlQuery = searchParams.get("query");
     if (!urlQuery) {
-      setQuery('');
+      setQuery("");
     }
   }, [searchParams]);
 
@@ -20,17 +20,18 @@ const SearchForm: React.FC = () => {
     event.preventDefault();
 
     if (!query) {
-      setSearchError('Please enter a search term.');
+      setSearchError("Please enter a search term.");
       return;
     }
 
     setLoading(true);
-    setSearchError('');
+    setSearchError("");
 
     try {
       setSearchParams({ query });
     } catch (error) {
-      setSearchError('An error occurred while setting the search query.');
+      console.error("An error occurred:", error);
+      setSearchError("An error occurred while setting the search query.");
     } finally {
       setLoading(false);
     }
