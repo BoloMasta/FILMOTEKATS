@@ -146,9 +146,11 @@ const MovieModal: React.FC<MovieModalProps> = ({ movie, onClose }) => {
               <p className={styles.movieGenres}>Genres: {movieGenres.join(", ")}</p>
             )}
             <p className={styles.movieOverview}>{movieDetails.overview}</p>
-            <p className={styles.movieVoteAverage}>
-              Rating: {movieDetails.vote_average.toFixed(1)}
-            </p>
+            {movieDetails.vote_average > 0 && (
+              <p className={styles.movieVoteAverage}>
+                Rating: {movieDetails.vote_average.toFixed(1)}
+              </p>
+            )}
 
             <Button
               onClick={() => setIsDetailsVisible(!isDetailsVisible)}
@@ -163,16 +165,22 @@ const MovieModal: React.FC<MovieModalProps> = ({ movie, onClose }) => {
               }`}
               ref={detailsRef}
             >
-              <p className={styles.detailItem}>Votes: {movieDetails.vote_count}</p>
-              <p className={styles.detailItem}>Release Date: {movieDetails.release_date}</p>
+              {movieDetails.vote_count > 0 && (
+                <p className={styles.detailItem}>Votes: {movieDetails.vote_count}</p>
+              )}
+              {movieDetails.release_date !== "" && (
+                <p className={styles.detailItem}>Release Date: {movieDetails.release_date}</p>
+              )}
               {movieDetails.spoken_languages.length > 0 && (
                 <p className={styles.detailItem}>
                   Spoken Languages:{" "}
                   {movieDetails.spoken_languages.map((lang) => lang.english_name).join(", ")}
                 </p>
               )}
-              <p className={styles.detailItem}>Budget: ${movieDetails.budget.toLocaleString()}</p>
-              {movieDetails.runtime !== null && (
+              {movieDetails.budget > 0 && (
+                <p className={styles.detailItem}>Budget: ${movieDetails.budget.toLocaleString()}</p>
+              )}
+              {movieDetails.runtime !== null && movieDetails.runtime > 0 && (
                 <p className={styles.detailItem}>Runtime: {formatRuntime(movieDetails.runtime)}</p>
               )}
               <a

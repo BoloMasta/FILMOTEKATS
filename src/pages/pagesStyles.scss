@@ -1,0 +1,14 @@
+.pageHeaderStyle {
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.galleryContainer {
+  flex: 1;
+}

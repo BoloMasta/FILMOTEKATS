@@ -3,8 +3,8 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import Layout from "./layout/Layout";
 
-const HomePage = lazy(() => import("./pages/HomePage/HomePage"));
-const LibraryPage = lazy(() => import("./pages/LibraryPage/LibraryPage"));
+const HomePage = lazy(() => import("./pages/HomePage"));
+const LibraryPage = lazy(() => import("./pages/LibraryPage"));
 
 const App: React.FC = () => {
   return (
