@@ -13,8 +13,8 @@ const Logo: React.FC = () => {
     <div className={styles.logoContainer} onClick={handleClick}>
       <div className={styles.logo} style={{ textDecoration: "none", cursor: "pointer" }}>
         <div className={styles.logoIconWrapper}>
-          <SVG src="/images/icons/header-icon.svg" className={styles.logoIcon} />
-          <SVG src="/images/icons/header-icon.svg" className={styles.logoIcon} />
+          <SVG src="../images/icons/header-icon.svg" className={styles.logoIcon} />
+          <SVG src="../images/icons/header-icon.svg" className={styles.logoIcon} />
         </div>
         <span className={styles.title}>Filmoteka</span>
       </div>
