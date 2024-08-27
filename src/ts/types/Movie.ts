@@ -1,15 +1,4 @@
-export interface Movie {
-  id: number;
-  title: string;
-  overview: string;
-  poster_path: string | null;
-  release_date: string;
-  genre_ids: number[];
-  vote_average: number;
-  vote_count: number;
-  adult: boolean;
-}
-
+// Base and common types
 export interface Genre {
   id: number;
   name: string;
@@ -20,6 +9,7 @@ export interface Language {
   iso_639_1: string;
   name: string;
 }
+
 export interface ProductionCompany {
   id: number;
   logo_path: string | null;
@@ -32,22 +22,26 @@ export interface ProductionCountry {
   name: string;
 }
 
-export interface MovieDetails {
-  backdrop_path: string | null;
+// Interfaces for Movie
+export interface MinimalMovie {
   id: number;
   title: string;
-  original_title: string;
-  overview: string;
   poster_path: string | null;
-  media_type: string;
-  adult: boolean;
-  original_language: string;
-  genre_ids: number[];
-  popularity: number;
+}
+
+export interface Movie extends MinimalMovie {
+  overview: string;
   release_date: string;
-  video: boolean;
+  genre_ids: number[];
   vote_average: number;
   vote_count: number;
+  adult: boolean;
+}
+
+export interface MovieDetails extends Movie {
+  backdrop_path: string | null;
+  original_title: string;
+  popularity: number;
   budget: number;
   runtime: number | null;
   imdb_id: string | null;
@@ -58,18 +52,12 @@ export interface MovieDetails {
   production_countries: ProductionCountry[];
 }
 
+// Interfaces for API reponses
 export interface MovieListResponse {
   page: number;
   results: Movie[];
   total_pages: number;
   total_results: number;
-}
-
-export interface MovieDetailsResponse extends MovieDetails {
-  genres: Genre[];
-  budget: number;
-  revenue: number;
-  runtime: number | null;
 }
 
 export interface GenresIdsListResponse {

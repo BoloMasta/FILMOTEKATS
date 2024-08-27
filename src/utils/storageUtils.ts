@@ -1,58 +1,42 @@
-import { Movie } from './../ts/types/Movie';
+import { MinimalMovie } from "./../ts/types/Movie";
 
-const QUEUE_KEY = 'movieQueue';
-const WATCHED_KEY = 'watchedMovies';
+const QUEUE_KEY = "movieQueue";
+const WATCHED_KEY = "watchedMovies";
 
-export const addToQueue = (movie: Movie) => {
-  const queue = JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]');
-  if (!queue.some((item: Movie) => item.id === movie.id)) {
-    queue.push({
+const getFromStorage = (key: string): MinimalMovie[] => {
+  return JSON.parse(localStorage.getItem(key) || "[]");
+};
+
+const saveToStorage = (key: string, data: MinimalMovie[]) => {
+  localStorage.setItem(key, JSON.stringify(data));
+};
+
+const addMovie = (key: string, movie: MinimalMovie) => {
+  const movies = getFromStorage(key);
+  if (!movies.some((item) => item.id === movie.id)) {
+    movies.push({
       id: movie.id,
       title: movie.title,
-      poster_path: movie.poster_path
+      poster_path: movie.poster_path,
     });
-    localStorage.setItem(QUEUE_KEY, JSON.stringify(queue));
+    saveToStorage(key, movies);
   }
 };
 
-export const removeFromQueue = (movie: Movie) => {
-  let queue = JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]');
-  queue = queue.filter((item: Movie) => item.id !== movie.id);
-  localStorage.setItem(QUEUE_KEY, JSON.stringify(queue));
+const removeMovie = (key: string, movie: MinimalMovie) => {
+  const movies = getFromStorage(key).filter((item) => item.id !== movie.id);
+  saveToStorage(key, movies);
 };
 
-export const addToWatched = (movie: Movie) => {
-  const watched = JSON.parse(localStorage.getItem(WATCHED_KEY) || '[]');
-  if (!watched.some((item: Movie) => item.id === movie.id)) {
-    watched.push({
-      id: movie.id,
-      title: movie.title,
-      poster_path: movie.poster_path
-    });
-    localStorage.setItem(WATCHED_KEY, JSON.stringify(watched));
-  }
-};
+export const addToQueue = (movie: MinimalMovie) => addMovie(QUEUE_KEY, movie);
+export const removeFromQueue = (movie: MinimalMovie) => removeMovie(QUEUE_KEY, movie);
+export const addToWatched = (movie: MinimalMovie) => addMovie(WATCHED_KEY, movie);
+export const removeFromWatched = (movie: MinimalMovie) => removeMovie(WATCHED_KEY, movie);
 
-export const removeFromWatched = (movie: Movie) => {
-  let watched = JSON.parse(localStorage.getItem(WATCHED_KEY) || '[]');
-  watched = watched.filter((item: Movie) => item.id !== movie.id);
-  localStorage.setItem(WATCHED_KEY, JSON.stringify(watched));
-};
+export const getQueue = (): MinimalMovie[] => getFromStorage(QUEUE_KEY);
+export const getWatched = (): MinimalMovie[] => getFromStorage(WATCHED_KEY);
 
-export const getQueue = (): Movie[] => {
-  return JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]');
-};
-
-export const getWatched = (): Movie[] => {
-  return JSON.parse(localStorage.getItem(WATCHED_KEY) || '[]');
-};
-
-export const isMovieInQueue = (movie: Movie): boolean => {
-  const queue = JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]');
-  return queue.some((item: Movie) => item.id === movie.id);
-};
-
-export const isMovieInWatched = (movie: Movie): boolean => {
-  const watched = JSON.parse(localStorage.getItem(WATCHED_KEY) || '[]');
-  return watched.some((item: Movie) => item.id === movie.id);
-};
+export const isMovieInQueue = (movie: MinimalMovie): boolean =>
+  getQueue().some((item) => item.id === movie.id);
+export const isMovieInWatched = (movie: MinimalMovie): boolean =>
+  getWatched().some((item) => item.id === movie.id);

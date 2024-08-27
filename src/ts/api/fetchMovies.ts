@@ -1,22 +1,18 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import { 
-  MovieListResponse, 
-  MovieDetailsResponse, 
-  GenresIdsListResponse 
-} from '../types/Movie';
+import axios, { AxiosInstance, AxiosResponse } from "axios";
+import { MovieListResponse, MovieDetails, GenresIdsListResponse } from "../types/Movie";
 
-const apiKey = '92be59e0090ddfe5570b8756c403476a';
+const apiKey = "92be59e0090ddfe5570b8756c403476a";
 
 export class FetchApiMovies {
   private axiosInstance: AxiosInstance;
 
   constructor() {
     this.axiosInstance = axios.create({
-      baseURL: 'https://api.themoviedb.org/3',
+      baseURL: "https://api.themoviedb.org/3",
       params: {
         api_key: apiKey,
-        language: 'en-US',  
-      }
+        language: "en-US",
+      },
     });
   }
 
@@ -25,23 +21,23 @@ export class FetchApiMovies {
       const response: AxiosResponse<T> = await this.axiosInstance.get(url, { params });
       return response.data;
     } catch (error) {
-      console.error('Opss, something went wrong', error);
+      console.error("Opss, something went wrong", error);
     }
   }
 
   getTrending(page: number): Promise<MovieListResponse | undefined> {
-    return this.fetchData<MovieListResponse>('/trending/movie/day', { page });
+    return this.fetchData<MovieListResponse>("/trending/movie/day", { page });
   }
 
   getSearch(query: string, page: number): Promise<MovieListResponse | undefined> {
-    return this.fetchData<MovieListResponse>('/search/movie', { query, page });
+    return this.fetchData<MovieListResponse>("/search/movie", { query, page });
   }
 
-  getMovieDetails(movie_id: number): Promise<MovieDetailsResponse | undefined> {
-    return this.fetchData<MovieDetailsResponse>(`/movie/${movie_id}`);
+  getMovieDetails(movie_id: number): Promise<MovieDetails | undefined> {
+    return this.fetchData<MovieDetails>(`/movie/${movie_id}`);
   }
 
   getGenresIdsList(): Promise<GenresIdsListResponse | undefined> {
-    return this.fetchData<GenresIdsListResponse>('/genre/movie/list');
+    return this.fetchData<GenresIdsListResponse>("/genre/movie/list");
   }
 }
