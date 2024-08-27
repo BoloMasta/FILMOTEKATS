@@ -1,19 +1,14 @@
-import { create } from 'zustand';
-import { FetchApiMovies } from './../ts/api/fetchMovies';
-import { Movie } from './../ts/types/Movie';
-import { getQueue, getWatched } from './../utils/storageUtils';
-
-interface Genre {
-  id: number;
-  name: string;
-}
+import { create } from "zustand";
+import { FetchApiMovies } from "./../ts/api/fetchMovies";
+import { MinimalMovie, Genre } from "./../ts/types/Movie";
+import { getQueue, getWatched } from "./../utils/storageUtils";
 
 interface Store {
   genres: Genre[];
-  view: 'queue' | 'watched' | null;
-  movies: Movie[];
+  view: "queue" | "watched" | null;
+  movies: MinimalMovie[]; // Zmienione z Movie[] na MinimalMovie[]
   fetchGenres: () => Promise<void>;
-  setView: (view: 'queue' | 'watched' | null) => void;
+  setView: (view: "queue" | "watched" | null) => void;
   loadMovies: () => void;
 }
 
@@ -26,7 +21,7 @@ export const useStore = create<Store>((set, get) => ({
     const genresListResponse = await api.getGenresIdsList();
     if (genresListResponse && genresListResponse.genres) {
       set({ genres: genresListResponse.genres });
-      localStorage.setItem('genres', JSON.stringify(genresListResponse.genres));
+      localStorage.setItem("genres", JSON.stringify(genresListResponse.genres));
     }
   },
   setView: (view) => {
@@ -35,12 +30,12 @@ export const useStore = create<Store>((set, get) => ({
   },
   loadMovies: () => {
     const view = get().view;
-    let movies: Movie[] = [];
-    if (view === 'queue') {
+    let movies: MinimalMovie[] = []; // Zmienione z Movie[] na MinimalMovie[]
+    if (view === "queue") {
       movies = getQueue();
-    } else if (view === 'watched') {
+    } else if (view === "watched") {
       movies = getWatched();
     }
     set({ movies });
-  }
+  },
 }));
