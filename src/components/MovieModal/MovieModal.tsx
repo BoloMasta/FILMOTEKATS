@@ -186,14 +186,39 @@ const MovieModal: React.FC<MovieModalProps> = ({ movie, onClose }) => {
               {movieDetails.runtime !== null && movieDetails.runtime > 0 && (
                 <p className={styles.detailItem}>Runtime: {formatRuntime(movieDetails.runtime)}</p>
               )}
-              <a
-                href={`https://www.imdb.com/title/${movieDetails.imdb_id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.imdbLink}
-              >
-                View on IMDb
-              </a>
+              {movieDetails.production_countries.length > 0 && (
+                <p className={styles.detailItem}>
+                  Production Countries:{" "}
+                  {movieDetails.production_countries.map((country) => country.name).join(", ")}
+                </p>
+              )}
+              {movieDetails.production_companies.length > 0 && (
+                <p className={styles.detailItem}>
+                  Production Companies:{" "}
+                  {movieDetails.production_companies.map((company) => company.name).join(", ")}
+                </p>
+              )}
+              {movieDetails.imdb_id !== null && (
+                <a
+                  href={`https://www.imdb.com/title/${movieDetails.imdb_id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.imdbLink}
+                >
+                  View on IMDb
+                </a>
+              )}
+              <br />
+              {movieDetails.homepage !== "" && (
+                <a
+                  href={movieDetails.homepage}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.homepageLink}
+                >
+                  Visit Website
+                </a>
+              )}
             </div>
 
             <MovieActionButtons

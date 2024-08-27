@@ -20,6 +20,17 @@ export interface Language {
   iso_639_1: string;
   name: string;
 }
+export interface ProductionCompany {
+  id: number;
+  logo_path: string | null;
+  name: string;
+  origin_country: string;
+}
+
+export interface ProductionCountry {
+  iso_3166_1: string;
+  name: string;
+}
 
 export interface MovieDetails {
   backdrop_path: string | null;
@@ -42,6 +53,9 @@ export interface MovieDetails {
   imdb_id: string | null;
   genres: Genre[];
   spoken_languages: Language[];
+  homepage: string | undefined;
+  production_companies: ProductionCompany[];
+  production_countries: ProductionCountry[];
 }
 
 export interface MovieListResponse {
