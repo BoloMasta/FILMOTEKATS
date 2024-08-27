@@ -9,7 +9,10 @@ const Footer: React.FC = () => {
         <p>
           Projekt i wykonanie:
           <a href="https://github.com/BoloMasta" target="_blank" rel="noopener noreferrer">
-            <SVG src="/images/icons/github-icon.svg" className={styles.footerIcon} />
+            <SVG
+              src={`${import.meta.env.BASE_URL}images/icons/github-icon.svg`}
+              className={styles.footerIcon}
+            />
             BoloMasta
           </a>
         </p>

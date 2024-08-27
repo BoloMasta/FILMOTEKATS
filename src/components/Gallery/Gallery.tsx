@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Movie } from "../../ts/types/Movie";
 import noPoster from "../../images/no-poster.jpg";
 import styles from "./Gallery.module.scss";
@@ -18,8 +18,6 @@ const Gallery: React.FC<GalleryProps> = ({ movies }) => {
   const handleCloseModal = () => {
     setSelectedMovie(null);
   };
-
-
 
   return (
     <div>
@@ -47,13 +45,7 @@ const Gallery: React.FC<GalleryProps> = ({ movies }) => {
         )}
       </div>
 
-      {selectedMovie && (
-        <MovieModal
-          movie={selectedMovie}
-          onClose={handleCloseModal}
-
-        />
-      )}
+      {selectedMovie && <MovieModal movie={selectedMovie} onClose={handleCloseModal} />}
     </div>
   );
 };

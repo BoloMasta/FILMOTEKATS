@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import SVG from "react-inlinesvg";
-import styles from "./SearchForm.module.scss";
 import { useSearchParams } from "react-router-dom";
+import styles from "./SearchForm.module.scss";
 
 const SearchForm: React.FC = () => {
   const [query, setQuery] = useState<string>("");
@@ -52,7 +52,10 @@ const SearchForm: React.FC = () => {
           />
         </label>
         <button className={styles.formBtn} type="submit" disabled={loading}>
-          <SVG src="/images/icons/search-icon.svg" className={styles.formBtnIcon} />
+          <SVG
+            src={`${import.meta.env.BASE_URL}images/icons/search-icon.svg`}
+            className={styles.formBtnIcon}
+          />
         </button>
         {searchError && <div className={styles.searchError}>{searchError}</div>}
       </form>

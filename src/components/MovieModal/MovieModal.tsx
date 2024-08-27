@@ -139,7 +139,10 @@ const MovieModal: React.FC<MovieModalProps> = ({ movie, onClose }) => {
             <h2 className={styles.movieTitle}>
               {movieDetails.title}
               {movieDetails.adult && (
-                <SVG src="/images/icons/18-icon.svg" className={styles.adultIcon} />
+                <SVG
+                  src={`${import.meta.env.BASE_URL}images/icons/18-icon.svg`}
+                  className={styles.adultIcon}
+                />
               )}
             </h2>
             {movieGenres.length > 0 && (
