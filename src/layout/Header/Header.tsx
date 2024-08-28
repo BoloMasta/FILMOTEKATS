@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Logo from "../../components/Logo/Logo";
 import Navigation from "../../components/Navigation/Navigation";
 import SearchForm from "../../components/SearchForm/SearchForm";
@@ -10,8 +10,9 @@ import { useStore } from "../../utils/store";
 
 const Header: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { view, setView } = useStore((state) => ({
-    view: state.view,
+    view: state.view as "queue" | "watched" | null, // Cast the view to a valid type
     setView: state.setView,
   }));
 
@@ -36,12 +37,18 @@ const Header: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (location.pathname === "/library") {
-      setView("queue");
+    const viewFromPath = location.pathname.split("/").pop();
+    if (viewFromPath === "queue" || viewFromPath === "watched") {
+      setView(viewFromPath as "queue" | "watched");
     } else {
       setView(null);
     }
   }, [location.pathname, setView]);
+
+  const handleViewChange = (view: "queue" | "watched") => {
+    setView(view);
+    navigate(`/FILMOTEKATS/library/${view}`);
+  };
 
   return (
     <header>
@@ -49,16 +56,16 @@ const Header: React.FC = () => {
         <Logo />
         <Navigation />
         <div className={styles.controlsWrapper}>
-          {location.pathname === "/library" ? (
+          {location.pathname.startsWith("/FILMOTEKATS/library/") ? (
             <div className={styles.libraryControls}>
               <Button
-                onClick={() => setView("queue")}
+                onClick={() => handleViewChange("queue")}
                 label="Queue"
                 variant={view === "queue" ? "primary" : "secondary"}
                 className={styles.button}
               />
               <Button
-                onClick={() => setView("watched")}
+                onClick={() => handleViewChange("watched")}
                 label="Watched"
                 variant={view === "watched" ? "primary" : "secondary"}
                 className={styles.button}

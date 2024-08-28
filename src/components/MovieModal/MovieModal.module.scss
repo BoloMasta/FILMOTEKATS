@@ -9,6 +9,7 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  z-index: 100;
 }
 
 .modalContent {
@@ -23,6 +24,7 @@
   flex-direction: column;
   position: relative;
   border: 2px solid var(--primary-color);
+  box-shadow: 0 6px 6px hsl(0deg 0% 0% / 0.3);
 
   @include breakpoint("tablet") {
     padding: 1.5rem;

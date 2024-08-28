@@ -6,16 +6,17 @@ const Navigation: React.FC = () => (
     <ul className={styles.navigationList}>
       <li className={styles.navigationItem}>
         <NavLink
-          to="/"
+          to="/FILMOTEKATS/"
           style={{ textDecoration: "none" }}
           className={({ isActive }) => (isActive ? styles.activeLink : styles.link)}
+          end
         >
           Home
         </NavLink>
       </li>
       <li className={styles.navigationItem}>
         <NavLink
-          to="/library"
+          to="/FILMOTEKATS/library/queue"
           style={{ textDecoration: "none" }}
           className={({ isActive }) => (isActive ? styles.activeLink : styles.link)}
         >

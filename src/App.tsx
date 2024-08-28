@@ -24,11 +24,12 @@ const App: React.FC = () => {
       </Helmet>
 
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route path="/FILMOTEKATS" element={<Layout />}>
           <Route index element={<HomePage />} />
-          <Route path="search/:query" element={<HomePage />} />
-          <Route path="library" element={<LibraryPage />} />
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/FILMOTEKATS/search/:query" element={<HomePage />} />
+          <Route path="/FILMOTEKATS/library" element={<LibraryPage />} />
+          <Route path="/FILMOTEKATS/library/:view" element={<LibraryPage />} />
+          <Route path="*" element={<Navigate to="/FILMOTEKATS" />} />
         </Route>
       </Routes>
     </>
