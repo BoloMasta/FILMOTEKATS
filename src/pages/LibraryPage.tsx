@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useStore } from "../utils/store";
-import { Movie } from "../ts/types/Movie";
+import { MinimalMovie } from "../ts/types/Movie";
 import Gallery from "../components/Gallery/Gallery";
 import Pagination from "../components/Pagination/Pagination";
 import "./pagesStyles.scss";
@@ -14,9 +14,11 @@ const LibraryPage: React.FC = () => {
     loadMovies: state.loadMovies,
   }));
 
+  // type MovieType = MinimalMovie | Movie;
+
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const [currentMovies, setCurrentMovies] = useState<Movie[]>([]);
+  const [currentMovies, setCurrentMovies] = useState<MinimalMovie[]>([]);
 
   useEffect(() => {
     const fetchMovies = async () => {

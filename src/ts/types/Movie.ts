@@ -22,6 +22,20 @@ export interface ProductionCountry {
   name: string;
 }
 
+export interface GalleryProps {
+  movies: MinimalMovie[];
+}
+
+export interface MovieModalProps {
+  movieId: number;
+  onClose: () => void;
+}
+
+export interface ThemeSwitchProps {
+  isDarkTheme: boolean;
+  onToggleTheme: () => void;
+}
+
 // Interfaces for Movie
 export interface MinimalMovie {
   id: number;
@@ -29,19 +43,14 @@ export interface MinimalMovie {
   poster_path: string | null;
 }
 
-export interface Movie extends MinimalMovie {
+export interface MovieDetails extends MinimalMovie {
   overview: string;
   release_date: string;
-  genre_ids: number[];
   vote_average: number;
   vote_count: number;
   adult: boolean;
-}
-
-export interface MovieDetails extends Movie {
   backdrop_path: string | null;
   original_title: string;
-  popularity: number;
   budget: number;
   runtime: number | null;
   imdb_id: string | null;
@@ -55,7 +64,7 @@ export interface MovieDetails extends Movie {
 // Interfaces for API reponses
 export interface MovieListResponse {
   page: number;
-  results: Movie[];
+  results: MinimalMovie[];
   total_pages: number;
   total_results: number;
 }

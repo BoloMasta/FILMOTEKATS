@@ -1,8 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import { useStore } from "../../utils/store";
 import { FetchApiMovies } from "../../ts/api/fetchMovies";
 import SVG from "react-inlinesvg";
-import { Movie, MovieDetails } from "../../ts/types/Movie";
+import { MovieDetails, MovieModalProps } from "../../ts/types/Movie";
 import Button from "../Button/Button";
 import MovieActionButtons from "../MovieActionButtons/MovieActionButtons";
 import {
@@ -16,15 +15,8 @@ import {
 import noPoster from "../../images/no-poster.jpg";
 import styles from "./MovieModal.module.scss";
 
-interface MovieModalProps {
-  movie: Movie;
-  onClose: () => void;
-}
-
-const MovieModal: React.FC<MovieModalProps> = ({ movie, onClose }) => {
-  const { genres, fetchGenres } = useStore();
+const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
   const [movieDetails, setMovieDetails] = useState<MovieDetails | null>(null);
-  const [movieGenres, setMovieGenres] = useState<string[]>([]);
   const [inQueue, setInQueue] = useState<boolean>(false);
   const [inWatched, setInWatched] = useState<boolean>(false);
   const [isDetailsVisible, setIsDetailsVisible] = useState<boolean>(false);
@@ -35,7 +27,7 @@ const MovieModal: React.FC<MovieModalProps> = ({ movie, onClose }) => {
     const fetchMovieDetails = async () => {
       const api = new FetchApiMovies();
       try {
-        const details = await api.getMovieDetails(movie.id);
+        const details = await api.getMovieDetails(movieId);
         if (details) {
           setMovieDetails(details);
           setInQueue(isMovieInQueue(details));
@@ -50,20 +42,7 @@ const MovieModal: React.FC<MovieModalProps> = ({ movie, onClose }) => {
     };
 
     fetchMovieDetails();
-  }, [movie.id]);
-
-  useEffect(() => {
-    if (genres.length === 0) {
-      fetchGenres();
-    }
-  }, [fetchGenres, genres.length]);
-
-  useEffect(() => {
-    if (movieDetails) {
-      const genreNames = movieDetails.genres.map((genre) => genre.name);
-      setMovieGenres(genreNames);
-    }
-  }, [movieDetails, genres]);
+  }, [movieId]);
 
   const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (event.target === event.currentTarget) {
@@ -84,31 +63,41 @@ const MovieModal: React.FC<MovieModalProps> = ({ movie, onClose }) => {
   }, [onClose]);
 
   const onAddToQueue = useCallback(() => {
-    addToQueue(movie);
-    setInQueue(true);
-  }, [movie]);
+    if (movieDetails) {
+      addToQueue(movieDetails);
+      setInQueue(true);
+    }
+  }, [movieDetails]);
 
   const onRemoveFromQueue = useCallback(() => {
-    removeFromQueue(movie);
-    setInQueue(false);
-  }, [movie]);
+    if (movieDetails) {
+      removeFromQueue(movieDetails);
+      setInQueue(false);
+    }
+  }, [movieDetails]);
 
   const onAddToWatched = useCallback(() => {
-    addToWatched(movie);
-    setInWatched(true);
-  }, [movie]);
+    if (movieDetails) {
+      addToWatched(movieDetails);
+      setInWatched(true);
+    }
+  }, [movieDetails]);
 
   const onRemoveFromWatched = useCallback(() => {
-    removeFromWatched(movie);
-    setInWatched(false);
-  }, [movie]);
+    if (movieDetails) {
+      removeFromWatched(movieDetails);
+      setInWatched(false);
+    }
+  }, [movieDetails]);
 
   const moveToWatched = useCallback(() => {
-    removeFromQueue(movie);
-    addToWatched(movie);
-    setInQueue(false);
-    setInWatched(true);
-  }, [movie]);
+    if (movieDetails) {
+      removeFromQueue(movieDetails);
+      addToWatched(movieDetails);
+      setInQueue(false);
+      setInWatched(true);
+    }
+  }, [movieDetails]);
 
   const formatRuntime = (runtime: number) => {
     const hours = Math.floor(runtime / 60);
@@ -145,8 +134,11 @@ const MovieModal: React.FC<MovieModalProps> = ({ movie, onClose }) => {
                 />
               )}
             </h2>
-            {movieGenres.length > 0 && (
-              <p className={styles.movieGenres}>Genres: {movieGenres.join(", ")}</p>
+
+            {movieDetails.genres.length > 0 && (
+              <p className={styles.movieGenres}>
+                Genres: {movieDetails.genres.map((genre) => genre.name).join(", ")}
+              </p>
             )}
             <p className={styles.movieOverview}>{movieDetails.overview}</p>
             {movieDetails.vote_average > 0 && (
@@ -229,7 +221,7 @@ const MovieModal: React.FC<MovieModalProps> = ({ movie, onClose }) => {
               onAddToWatched={onAddToWatched}
               onRemoveFromWatched={onRemoveFromWatched}
               moveToWatched={moveToWatched}
-              movie={movie}
+              movie={movieDetails} // Przekazuje szczegóły filmu zamiast obiektu Movie
             />
           </div>
         </div>

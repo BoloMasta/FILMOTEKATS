@@ -1,13 +1,12 @@
 // HomePage.tsx
 import { useEffect, useState } from "react";
 import { FetchApiMovies } from "../../ts/api/fetchMovies";
-import { Movie } from "../../ts/types/Movie";
+import { MinimalMovie } from "../../ts/types/Movie";
 import Gallery from "../../components/Gallery/Gallery";
-import Pagination from "../../components/Pagination/Pagination"; 
-
+import Pagination from "../../components/Pagination/Pagination";
 
 const HomePage: React.FC = () => {
-  const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
+  const [popularMovies, setPopularMovies] = useState<MinimalMovie[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
 
@@ -17,7 +16,7 @@ const HomePage: React.FC = () => {
       const data = await api.getTrending(page);
       if (data && data.results) {
         setPopularMovies(data.results.slice(0, 20));
-        setTotalPages(data.total_pages / 2); 
+        setTotalPages(data.total_pages / 2);
       }
     };
 

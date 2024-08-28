@@ -1,22 +1,18 @@
 import { useState } from "react";
-import { Movie } from "../../ts/types/Movie";
+import { GalleryProps } from "../../ts/types/Movie"; // Importuj GalleryProps z pliku typów
 import noPoster from "../../images/no-poster.jpg";
 import styles from "./Gallery.module.scss";
-import MovieModal from "../MovieModal/MovieModal"; // Import MovieModal
-
-interface GalleryProps {
-  movies: Movie[];
-}
+import MovieModal from "../MovieModal/MovieModal";
 
 const Gallery: React.FC<GalleryProps> = ({ movies }) => {
-  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+  const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
 
-  const handleMovieClick = (movie: Movie) => {
-    setSelectedMovie(movie);
+  const handleMovieClick = (movieId: number) => {
+    setSelectedMovieId(movieId);
   };
 
   const handleCloseModal = () => {
-    setSelectedMovie(null);
+    setSelectedMovieId(null);
   };
 
   return (
@@ -27,7 +23,7 @@ const Gallery: React.FC<GalleryProps> = ({ movies }) => {
             <div
               key={movie.id}
               className={styles.movieItem}
-              onClick={() => handleMovieClick(movie)}
+              onClick={() => handleMovieClick(movie.id)}
             >
               <img
                 src={
@@ -45,7 +41,7 @@ const Gallery: React.FC<GalleryProps> = ({ movies }) => {
         )}
       </div>
 
-      {selectedMovie && <MovieModal movie={selectedMovie} onClose={handleCloseModal} />}
+      {selectedMovieId && <MovieModal movieId={selectedMovieId} onClose={handleCloseModal} />}
     </div>
   );
 };
