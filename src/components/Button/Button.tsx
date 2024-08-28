@@ -1,12 +1,5 @@
+import { ButtonProps } from "../../ts/types/Movie";
 import styles from "./Button.module.scss";
-
-type ButtonProps = {
-  onClick: () => void;
-  label: string;
-  className?: string;
-  disabled?: boolean;
-  variant?: "primary" | "secondary" | "tertiary";
-};
 
 const Button: React.FC<ButtonProps> = ({
   onClick,

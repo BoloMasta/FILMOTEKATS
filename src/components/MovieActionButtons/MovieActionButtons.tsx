@@ -1,17 +1,6 @@
 import Button from "../Button/Button";
 import styles from "./MovieActionButtons.module.scss";
-import { Movie } from "../../ts/types/Movie";
-
-interface MovieActionButtonsProps {
-  inQueue: boolean;
-  inWatched: boolean;
-  onAddToQueue: (movie: Movie) => void;
-  onRemoveFromQueue: (movie: Movie) => void;
-  onAddToWatched: (movie: Movie) => void;
-  onRemoveFromWatched: (movie: Movie) => void;
-  moveToWatched: (movie: Movie) => void;
-  movie: Movie;
-}
+import { MovieActionButtonsProps } from "../../ts/types/Movie";
 
 const MovieActionButtons: React.FC<MovieActionButtonsProps> = ({
   inQueue,

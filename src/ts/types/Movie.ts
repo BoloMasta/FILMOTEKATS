@@ -1,4 +1,23 @@
 // Base and common types
+export type ButtonProps = {
+  onClick: () => void;
+  label: string;
+  className?: string;
+  disabled?: boolean;
+  variant?: "primary" | "secondary" | "tertiary";
+};
+
+export interface MovieActionButtonsProps {
+  inQueue: boolean;
+  inWatched: boolean;
+  onAddToQueue: (movie: MinimalMovie) => void;
+  onRemoveFromQueue: (movie: MinimalMovie) => void;
+  onAddToWatched: (movie: MinimalMovie) => void;
+  onRemoveFromWatched: (movie: MinimalMovie) => void;
+  moveToWatched: (movie: MinimalMovie) => void;
+  movie: MinimalMovie;
+}
+
 export interface Genre {
   id: number;
   name: string;
