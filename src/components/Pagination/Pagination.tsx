@@ -1,14 +1,9 @@
-import Button from '../../components/Button/Button';
-import styles from './Pagination.module.scss'; 
-
-type PaginationProps = {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-};
+import Button from "../../components/Button/Button";
+import { PaginationProps } from "../../ts/types/Movie";
+import styles from "./Pagination.module.scss";
 
 const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
-  const maxVisibleButtons = 4; 
+  const maxVisibleButtons = 4;
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -85,11 +80,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
     return buttons;
   };
 
-  return (
-    <div className={styles.pagination}>
-      {renderPaginationButtons()}
-    </div>
-  );
+  return <div className={styles.pagination}>{renderPaginationButtons()}</div>;
 };
 
 export default Pagination;

@@ -18,6 +18,12 @@ export interface MovieActionButtonsProps {
   movie: MinimalMovie;
 }
 
+export type PaginationProps = {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+};
+
 export interface Genre {
   id: number;
   name: string;

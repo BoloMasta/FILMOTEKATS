@@ -1,14 +1,14 @@
 import { useEffect, useState, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FetchApiMovies } from "../ts/api/fetchMovies";
-import { Movie } from "../ts/types/Movie";
+import { MinimalMovie } from "../ts/types/Movie";
 import Gallery from "../components/Gallery/Gallery";
 import Pagination from "../components/Pagination/Pagination";
 import "./pagesStyles.scss";
 
 const HomePage: React.FC = () => {
-  const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
-  const [searchResults, setSearchResults] = useState<Movie[] | null>(null);
+  const [popularMovies, setPopularMovies] = useState<MinimalMovie[]>([]);
+  const [searchResults, setSearchResults] = useState<MinimalMovie[] | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [searchParams, setSearchParams] = useSearchParams();

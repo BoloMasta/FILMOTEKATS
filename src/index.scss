@@ -4,29 +4,3 @@
 
 @import "./styles/themes/variables";
 @import "./styles/themes/mixins";
-
-//@import "./styles/main.scss";
-
-// :root {
-//   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-//   line-height: 1.5;
-//   font-weight: 400;
-
-//   font-synthesis: none;
-//   text-rendering: optimizeLegibility;
-//   -webkit-font-smoothing: antialiased;
-//   -moz-osx-font-smoothing: grayscale;
-// }
-
-
-.main-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-  
-.page-header {
-    padding: 0.5rem;
-    border-bottom: 1px solid var(--primary-color);
-    margin-bottom: 1rem;
-  }

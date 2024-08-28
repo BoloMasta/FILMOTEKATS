@@ -14,8 +14,6 @@ const LibraryPage: React.FC = () => {
     loadMovies: state.loadMovies,
   }));
 
-  // type MovieType = MinimalMovie | Movie;
-
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [currentMovies, setCurrentMovies] = useState<MinimalMovie[]>([]);

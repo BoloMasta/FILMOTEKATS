@@ -5,9 +5,9 @@
 }
 
 .themeLabel {
-  margin-bottom: 8px; /* Zmniejsz margines pod tekstem */
+  margin-bottom: 8px;
   color: var(--text-color);
-  font-size: 14px; /* Dostosuj rozmiar czcionki */
+  font-size: 14px;
 }
 
 .themeSwitchContainer {
@@ -36,10 +36,10 @@
     &:before {
       position: absolute;
       content: "";
-      height: 14px; /* Można zwiększyć wysokość dla lepszej widoczności */
+      height: 14px;
       width: 14px;
       border-radius: 50%;
-      left: 3px; /* Dostosuj położenie suwaka */
+      left: 3px;
       bottom: 3px;
       background-color: var(--background);
       transition: 0.4s;
@@ -51,6 +51,6 @@
   }
 
   input:checked + .slider:before {
-    transform: translateX(14px); /* Dostosuj przesunięcie suwaka */
+    transform: translateX(14px);
   }
 }
