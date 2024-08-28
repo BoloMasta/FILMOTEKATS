@@ -1,4 +1,4 @@
-import { ThemeSwitchProps } from "../../ts/types/Movie";
+import { ThemeSwitchProps } from "../../ts/types/componentProps";
 import styles from "./ThemeSwitch.module.scss";
 
 const ThemeSwitch: React.FC<ThemeSwitchProps> = ({ isDarkTheme, onToggleTheme }) => (

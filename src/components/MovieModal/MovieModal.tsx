@@ -1,9 +1,10 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { FetchApiMovies } from "../../ts/api/fetchMovies";
 import SVG from "react-inlinesvg";
-import { MovieDetails, MovieModalProps } from "../../ts/types/Movie";
 import Button from "../Button/Button";
 import MovieActionButtons from "../MovieActionButtons/MovieActionButtons";
+import { MovieDetails } from "../../ts/types/movieTypes";
+import { MovieModalProps } from "../../ts/types/componentProps";
 import {
   addToQueue,
   addToWatched,

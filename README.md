@@ -4,7 +4,7 @@ Filmoteka is a web application that allows users to search for movies, view popu
 
 ## Live Preview
 
-Check out the live preview of the application: [Filmoteka Live](https://bolomasta.github.io/)
+Check out the live preview of the application: [Filmoteka Live](https://bolomasta.github.io/FILMOTEKATS/)
 
 ## Description
 

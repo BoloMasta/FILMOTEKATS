@@ -1,6 +1,6 @@
 import Button from "../Button/Button";
 import styles from "./MovieActionButtons.module.scss";
-import { MovieActionButtonsProps } from "../../ts/types/Movie";
+import { MovieActionButtonsProps } from "../../ts/types/componentProps";
 
 const MovieActionButtons: React.FC<MovieActionButtonsProps> = ({
   inQueue,

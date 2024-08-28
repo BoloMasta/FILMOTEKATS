@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
-import { MovieListResponse, MovieDetails, GenresIdsListResponse } from "../types/Movie";
+import { MovieListResponse, GenresIdsListResponse } from "../types/apiTypes";
+import { MovieDetails } from "../types/movieTypes";
 
 const apiKey = "92be59e0090ddfe5570b8756c403476a";
 

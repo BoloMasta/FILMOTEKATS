@@ -1,4 +1,4 @@
-import { ButtonProps } from "../../ts/types/Movie";
+import { ButtonProps } from "../../ts/types/componentProps";
 import styles from "./Button.module.scss";
 
 const Button: React.FC<ButtonProps> = ({

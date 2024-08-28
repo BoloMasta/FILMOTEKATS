@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FetchApiMovies } from "../ts/api/fetchMovies";
-import { MinimalMovie } from "../ts/types/Movie";
+import { MinimalMovie } from "../ts/types/movieTypes";
 import Gallery from "../components/Gallery/Gallery";
 import Pagination from "../components/Pagination/Pagination";
 import "./pagesStyles.scss";

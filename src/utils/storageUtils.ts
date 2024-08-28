@@ -1,4 +1,4 @@
-import { MinimalMovie } from "./../ts/types/Movie";
+import { MinimalMovie } from "./../ts/types/movieTypes";
 
 const QUEUE_KEY = "movieQueue";
 const WATCHED_KEY = "watchedMovies";

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useStore } from "../utils/store";
-import { MinimalMovie } from "../ts/types/Movie";
+import { MinimalMovie } from "../ts/types/movieTypes";
 import Gallery from "../components/Gallery/Gallery";
 import Pagination from "../components/Pagination/Pagination";
 import "./pagesStyles.scss";

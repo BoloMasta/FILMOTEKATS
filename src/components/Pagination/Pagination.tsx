@@ -1,5 +1,5 @@
 import Button from "../../components/Button/Button";
-import { PaginationProps } from "../../ts/types/Movie";
+import { PaginationProps } from "../../ts/types/componentProps";
 import styles from "./Pagination.module.scss";
 
 const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { GalleryProps } from "../../ts/types/Movie"; // Importuj GalleryProps z pliku typów
+import { GalleryProps } from "../../ts/types/componentProps";
 import noPoster from "../../images/no-poster.jpg";
 import styles from "./Gallery.module.scss";
 import MovieModal from "../MovieModal/MovieModal";
