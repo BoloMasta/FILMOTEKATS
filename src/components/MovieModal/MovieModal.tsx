@@ -1,10 +1,10 @@
-import { useEffect, useState, useRef, useCallback } from "react";
-import { FetchApiMovies } from "../../ts/api/fetchMovies";
-import SVG from "react-inlinesvg";
-import Button from "../Button/Button";
-import MovieActionButtons from "../MovieActionButtons/MovieActionButtons";
-import { MovieDetails } from "../../ts/types/movieTypes";
-import { MovieModalProps } from "../../ts/types/componentProps";
+import { useEffect, useState, useRef, useCallback } from 'react';
+import { FetchApiMovies } from '../../ts/api/fetchMovies';
+import SVG from 'react-inlinesvg';
+import Button from '../Button/Button';
+import MovieActionButtons from '../MovieActionButtons/MovieActionButtons';
+import { MovieDetails } from '../../ts/types/movieTypes';
+import { MovieModalProps } from '../../ts/types/componentProps';
 import {
   addToQueue,
   addToWatched,
@@ -12,9 +12,9 @@ import {
   removeFromWatched,
   isMovieInQueue,
   isMovieInWatched,
-} from "./../../utils/storageUtils";
-import noPoster from "../../images/no-poster.jpg";
-import styles from "./MovieModal.module.scss";
+} from './../../utils/storageUtils';
+import noPoster from '../../images/no-poster.jpg';
+import styles from './MovieModal.module.scss';
 
 const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
   const [movieDetails, setMovieDetails] = useState<MovieDetails | null>(null);
@@ -37,7 +37,7 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
           setMovieDetails(null);
         }
       } catch (error) {
-        console.error("Failed to fetch movie details:", error);
+        console.error('Failed to fetch movie details:', error);
         setMovieDetails(null);
       }
     };
@@ -45,7 +45,9 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
     fetchMovieDetails();
   }, [movieId]);
 
-  const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleOverlayClick = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
     if (event.target === event.currentTarget) {
       onClose();
     }
@@ -53,13 +55,13 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         onClose();
       }
     };
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [onClose]);
 
@@ -138,7 +140,8 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
 
             {movieDetails.genres.length > 0 && (
               <p className={styles.movieGenres}>
-                Genres: {movieDetails.genres.map((genre) => genre.name).join(", ")}
+                Genres:{' '}
+                {movieDetails.genres.map((genre) => genre.name).join(', ')}
               </p>
             )}
             <p className={styles.movieOverview}>{movieDetails.overview}</p>
@@ -150,45 +153,59 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
 
             <Button
               onClick={() => setIsDetailsVisible(!isDetailsVisible)}
-              label={isDetailsVisible ? "Show Less" : "More Info"}
+              label={isDetailsVisible ? 'Show Less' : 'More Info'}
               variant="tertiary"
               className={styles.moreInfoButton}
             />
 
             <div
               className={`${styles.additionalDetails} ${
-                isDetailsVisible ? styles.detailsVisible : ""
+                isDetailsVisible ? styles.detailsVisible : ''
               }`}
               ref={detailsRef}
             >
               {movieDetails.vote_count > 0 && (
-                <p className={styles.detailItem}>Votes: {movieDetails.vote_count}</p>
+                <p className={styles.detailItem}>
+                  Votes: {movieDetails.vote_count}
+                </p>
               )}
-              {movieDetails.release_date !== "" && (
-                <p className={styles.detailItem}>Release Date: {movieDetails.release_date}</p>
+              {movieDetails.release_date !== '' && (
+                <p className={styles.detailItem}>
+                  Release Date: {movieDetails.release_date}
+                </p>
               )}
               {movieDetails.spoken_languages.length > 0 && (
                 <p className={styles.detailItem}>
-                  Spoken Languages:{" "}
-                  {movieDetails.spoken_languages.map((lang) => lang.english_name).join(", ")}
+                  Spoken Languages:{' '}
+                  {movieDetails.spoken_languages
+                    .map((lang) => lang.english_name)
+                    .join(', ')}
                 </p>
               )}
               {movieDetails.budget > 0 && (
-                <p className={styles.detailItem}>Budget: ${movieDetails.budget.toLocaleString()}</p>
+                <p className={styles.detailItem}>
+                  Budget: ${movieDetails.budget.toLocaleString()}
+                </p>
               )}
               {movieDetails.runtime !== null && movieDetails.runtime > 0 && (
-                <p className={styles.detailItem}>Runtime: {formatRuntime(movieDetails.runtime)}</p>
+                <p className={styles.detailItem}>
+                  Runtime: {formatRuntime(movieDetails.runtime)}
+                </p>
               )}
               {movieDetails.production_countries.length > 0 && (
                 <p className={styles.detailItem}>
-                  Production Countries:{" "}
-                  {movieDetails.production_countries.map((country) => country.name).join(", ")}
+                  Production Countries:{' '}
+                  {movieDetails.production_countries
+                    .map((country) => country.name)
+                    .join(', ')}
                 </p>
               )}
               {movieDetails.production_companies.length > 0 && (
                 <p className={styles.detailItem}>
-                  Production Companies:{" "}
-                  {movieDetails.production_companies.map((company) => company.name).join(", ")}
+                  Production Companies:{' '}
+                  {movieDetails.production_companies
+                    .map((company) => company.name)
+                    .join(', ')}
                 </p>
               )}
               {movieDetails.imdb_id !== null && (
@@ -202,7 +219,7 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
                 </a>
               )}
               <br />
-              {movieDetails.homepage !== "" && (
+              {movieDetails.homepage !== '' && (
                 <a
                   href={movieDetails.homepage}
                   target="_blank"
