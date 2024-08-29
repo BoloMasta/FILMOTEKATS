@@ -12,3 +12,21 @@
 .galleryContainer {
   flex: 1;
 }
+
+.buttonGroup {
+  right: 2rem;
+  top: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+
+  @include breakpoint(tablet) {
+    position: absolute;
+  }
+}
+
+.buttonGroup .activeButton {
+  background-color: var(--secondary-color);
+  color: var(--active-button-text);
+  border: 1px solid var(--active-button-border);
+}

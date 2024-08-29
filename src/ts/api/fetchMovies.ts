@@ -38,6 +38,26 @@ export class FetchApiMovies {
     return this.fetchData<MovieDetails>(`/movie/${movie_id}`);
   }
 
+  getKeywords(movie_id: number): Promise<MovieDetails | undefined> {
+    return this.fetchData<MovieDetails>(`/movie/${movie_id}/keywords`);
+  }
+
+  getSimilar(movie_id: number): Promise<MovieDetails | undefined> {
+    return this.fetchData<MovieDetails>(`/movie/${movie_id}/similar`);
+  }
+
+  getReviews(movie_id: number): Promise<MovieDetails | undefined> {
+    return this.fetchData<MovieDetails>(`/movie/${movie_id}/reviews`);
+  }
+
+  getTopRated(page: number): Promise<MovieListResponse | undefined> {
+    return this.fetchData<MovieListResponse>("/movie/top_rated", { page });
+  }
+
+  getUpcoming(page: number): Promise<MovieListResponse | undefined> {
+    return this.fetchData<MovieListResponse>("/movie/upcoming", { page });
+  }
+
   getGenresIdsList(): Promise<GenresIdsListResponse | undefined> {
     return this.fetchData<GenresIdsListResponse>("/genre/movie/list");
   }

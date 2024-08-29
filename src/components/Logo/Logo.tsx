@@ -7,7 +7,7 @@ const Logo: React.FC = () => {
   const logoIconPath = `${import.meta.env.BASE_URL}images/icons/header-icon.svg`;
 
   const handleClick = () => {
-    navigate("/", { replace: true });
+    navigate("/FILMOTEKATS/", { replace: true });
   };
 
   return (

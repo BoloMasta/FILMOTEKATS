@@ -18,6 +18,7 @@ const Layout: React.FC = () => {
     padding: "2rem",
     flex: "1",
     width: "100%",
+    position: "relative",
   };
 
   return (
