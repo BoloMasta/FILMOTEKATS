@@ -1,22 +1,26 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useEffect, useState, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom'; // Dodaj import useSearchParams
 import { FetchApiMovies } from '../ts/api/fetchMovies';
 import { MinimalMovie } from '../ts/types/movieTypes';
 import Gallery from '../components/Gallery/Gallery';
 import Pagination from '../components/Pagination/Pagination';
 import Button from '../components/Button/Button';
 import './pagesStyles.scss';
+import { useStore } from '../utils/store';
 
 const HomePage: React.FC = () => {
   const [movies, setMovies] = useState<MinimalMovie[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const [activeCategory, setActiveCategory] = useState<
-    'popular' | 'top_rated' | 'upcoming' | 'search'
-  >('popular');
-  const [searchParams, setSearchParams] = useSearchParams();
-  const query = searchParams.get('query') || '';
-  const isResettingPage = useRef(false);
+
+  const [searchParams, setSearchParams] = useSearchParams(); // Użyj useSearchParams
+
+  const { category, query, setCategory, setQuery } = useStore((state) => ({
+    category: state.category,
+    query: state.query,
+    setCategory: state.setCategory,
+    setQuery: state.setQuery,
+  }));
 
   const fetchMovies = useCallback(
     async (
@@ -24,6 +28,7 @@ const HomePage: React.FC = () => {
       category: 'popular' | 'top_rated' | 'upcoming' | 'search',
       query?: string
     ) => {
+      console.log(`Fetching movies for category: ${category}, page: ${page}, query: "${query}"`);
       const api = new FetchApiMovies();
       let data;
 
@@ -45,10 +50,10 @@ const HomePage: React.FC = () => {
         }
 
         if (data && data.results) {
-          // Ensure totalPages does not exceed 500
           const maxPages = Math.min(data.total_pages, 500);
           setMovies(data.results);
           setTotalPages(maxPages);
+          console.log(`Movies fetched: ${data.results.length} movies, totalPages: ${maxPages}`);
         }
       } catch (error) {
         console.error('Error fetching movies:', error);
@@ -58,56 +63,37 @@ const HomePage: React.FC = () => {
   );
 
   useEffect(() => {
-    if (query) {
-      isResettingPage.current = true;
-      setActiveCategory('search');
-      if (currentPage !== 1) {
-        setCurrentPage(1);
-        setSearchParams({ query, page: '1' });
-      } else {
-        fetchMovies(1, 'search', query);
-      }
-    } else if (activeCategory === 'search') {
-      isResettingPage.current = true;
-      setActiveCategory('popular');
-      setCurrentPage(1);
-      setSearchParams({ query: '', page: '1' });
-    }
-
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [query]);
-
-  useEffect(() => {
-    if (isResettingPage.current) {
-      isResettingPage.current = false;
-      return;
-    }
-    fetchMovies(currentPage, activeCategory, query);
-  }, [currentPage, activeCategory, query, fetchMovies]);
+    fetchMovies(currentPage, category, query);
+  }, [currentPage, category, query, fetchMovies]);
 
   const handlePageChange = (page: number) => {
+    console.log(`Page change: new page=${page}`);
     setCurrentPage(page);
-    setSearchParams({ query: query || '', page: page.toString() });
   };
 
-  const handleCategoryChange = (
-    category: 'popular' | 'top_rated' | 'upcoming' | 'search'
-  ) => {
-    setActiveCategory(category);
+  const handleCategoryChange = (newCategory: 'popular' | 'top_rated' | 'upcoming' | 'search') => {
     setCurrentPage(1);
-    setSearchParams({ query: category === 'search' ? query : '', page: '1' });
+
+    if (newCategory !== 'search') {
+      setQuery(''); // Wyczyść query
+      searchParams.delete('query'); // Usuń query z URL-a
+      setSearchParams(searchParams); // Zaktualizuj URL
+    }
+
+    setCategory(newCategory);
+    console.log(`Category change: new category=${newCategory}`);
   };
 
   return (
     <>
       <h2 className="pageHeaderStyle">
-        {activeCategory === 'search' && query
+        {category === 'search' && query
           ? `Search Results for "${query}"`
-          : activeCategory === 'popular'
+          : category === 'popular'
             ? 'Popular Movies'
-            : activeCategory === 'top_rated'
+            : category === 'top_rated'
               ? 'Top Rated Movies'
-              : activeCategory === 'upcoming'
+              : category === 'upcoming'
                 ? 'Upcoming Movies'
                 : ''}
       </h2>
@@ -115,17 +101,17 @@ const HomePage: React.FC = () => {
       <div className="buttonGroup">
         <Button
           onClick={() => handleCategoryChange('popular')}
-          className={activeCategory === 'popular' ? 'activeButton' : ''}
+          className={category === 'popular' ? 'activeButton' : ''}
           label="Popular Movies"
         />
         <Button
           onClick={() => handleCategoryChange('top_rated')}
-          className={activeCategory === 'top_rated' ? 'activeButton' : ''}
+          className={category === 'top_rated' ? 'activeButton' : ''}
           label="Top Rated"
         />
         <Button
           onClick={() => handleCategoryChange('upcoming')}
-          className={activeCategory === 'upcoming' ? 'activeButton' : ''}
+          className={category === 'upcoming' ? 'activeButton' : ''}
           label="Upcoming"
         />
       </div>

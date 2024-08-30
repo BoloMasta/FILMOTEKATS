@@ -1,28 +1,37 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { FetchApiMovies } from '../../ts/api/fetchMovies';
 import SVG from 'react-inlinesvg';
 import Button from '../Button/Button';
 import MovieActionButtons from '../MovieActionButtons/MovieActionButtons';
 import { MovieDetails } from '../../ts/types/movieTypes';
 import { MovieModalProps } from '../../ts/types/componentProps';
-import {
-  addToQueue,
-  addToWatched,
-  removeFromQueue,
-  removeFromWatched,
-  isMovieInQueue,
-  isMovieInWatched,
-} from './../../utils/storageUtils';
+import { useStore } from '../../utils/store'; // Importuj useStore
 import noPoster from '../../images/no-poster.jpg';
 import styles from './MovieModal.module.scss';
 
 const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
   const [movieDetails, setMovieDetails] = useState<MovieDetails | null>(null);
-  const [inQueue, setInQueue] = useState<boolean>(false);
-  const [inWatched, setInWatched] = useState<boolean>(false);
   const [isDetailsVisible, setIsDetailsVisible] = useState<boolean>(false);
 
-  const detailsRef = useRef<HTMLDivElement>(null);
+  // Dostęp do metod i stanu z useStore
+  const {
+    addToQueue,
+    removeFromQueue,
+    addToWatched,
+    removeFromWatched,
+    isMovieInQueue,
+    isMovieInWatched,
+  } = useStore((state) => ({
+    addToQueue: state.addToQueue,
+    removeFromQueue: state.removeFromQueue,
+    addToWatched: state.addToWatched,
+    removeFromWatched: state.removeFromWatched,
+    isMovieInQueue: state.isMovieInQueue,
+    isMovieInWatched: state.isMovieInWatched,
+  }));
+
+  const [inQueue, setInQueue] = useState<boolean>(false);
+  const [inWatched, setInWatched] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -43,11 +52,16 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
     };
 
     fetchMovieDetails();
-  }, [movieId]);
+  }, [movieId, isMovieInQueue, isMovieInWatched]);
 
-  const handleOverlayClick = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
+  useEffect(() => {
+    if (movieDetails) {
+      setInQueue(isMovieInQueue(movieDetails));
+      setInWatched(isMovieInWatched(movieDetails));
+    }
+  }, [movieDetails, isMovieInQueue, isMovieInWatched]);
+
+  const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (event.target === event.currentTarget) {
       onClose();
     }
@@ -70,28 +84,28 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
       addToQueue(movieDetails);
       setInQueue(true);
     }
-  }, [movieDetails]);
+  }, [movieDetails, addToQueue]);
 
   const onRemoveFromQueue = useCallback(() => {
     if (movieDetails) {
       removeFromQueue(movieDetails);
       setInQueue(false);
     }
-  }, [movieDetails]);
+  }, [movieDetails, removeFromQueue]);
 
   const onAddToWatched = useCallback(() => {
     if (movieDetails) {
       addToWatched(movieDetails);
       setInWatched(true);
     }
-  }, [movieDetails]);
+  }, [movieDetails, addToWatched]);
 
   const onRemoveFromWatched = useCallback(() => {
     if (movieDetails) {
       removeFromWatched(movieDetails);
       setInWatched(false);
     }
-  }, [movieDetails]);
+  }, [movieDetails, removeFromWatched]);
 
   const moveToWatched = useCallback(() => {
     if (movieDetails) {
@@ -100,7 +114,7 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
       setInQueue(false);
       setInWatched(true);
     }
-  }, [movieDetails]);
+  }, [movieDetails, removeFromQueue, addToWatched]);
 
   const formatRuntime = (runtime: number) => {
     const hours = Math.floor(runtime / 60);
@@ -140,8 +154,7 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
 
             {movieDetails.genres.length > 0 && (
               <p className={styles.movieGenres}>
-                Genres:{' '}
-                {movieDetails.genres.map((genre) => genre.name).join(', ')}
+                Genres: {movieDetails.genres.map((genre) => genre.name).join(', ')}
               </p>
             )}
             <p className={styles.movieOverview}>{movieDetails.overview}</p>
@@ -162,50 +175,36 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
               className={`${styles.additionalDetails} ${
                 isDetailsVisible ? styles.detailsVisible : ''
               }`}
-              ref={detailsRef}
+              // ref={detailsRef}
             >
               {movieDetails.vote_count > 0 && (
-                <p className={styles.detailItem}>
-                  Votes: {movieDetails.vote_count}
-                </p>
+                <p className={styles.detailItem}>Votes: {movieDetails.vote_count}</p>
               )}
               {movieDetails.release_date !== '' && (
-                <p className={styles.detailItem}>
-                  Release Date: {movieDetails.release_date}
-                </p>
+                <p className={styles.detailItem}>Release Date: {movieDetails.release_date}</p>
               )}
               {movieDetails.spoken_languages.length > 0 && (
                 <p className={styles.detailItem}>
                   Spoken Languages:{' '}
-                  {movieDetails.spoken_languages
-                    .map((lang) => lang.english_name)
-                    .join(', ')}
+                  {movieDetails.spoken_languages.map((lang) => lang.english_name).join(', ')}
                 </p>
               )}
               {movieDetails.budget > 0 && (
-                <p className={styles.detailItem}>
-                  Budget: ${movieDetails.budget.toLocaleString()}
-                </p>
+                <p className={styles.detailItem}>Budget: ${movieDetails.budget.toLocaleString()}</p>
               )}
               {movieDetails.runtime !== null && movieDetails.runtime > 0 && (
-                <p className={styles.detailItem}>
-                  Runtime: {formatRuntime(movieDetails.runtime)}
-                </p>
+                <p className={styles.detailItem}>Runtime: {formatRuntime(movieDetails.runtime)}</p>
               )}
               {movieDetails.production_countries.length > 0 && (
                 <p className={styles.detailItem}>
                   Production Countries:{' '}
-                  {movieDetails.production_countries
-                    .map((country) => country.name)
-                    .join(', ')}
+                  {movieDetails.production_countries.map((country) => country.name).join(', ')}
                 </p>
               )}
               {movieDetails.production_companies.length > 0 && (
                 <p className={styles.detailItem}>
                   Production Companies:{' '}
-                  {movieDetails.production_companies
-                    .map((company) => company.name)
-                    .join(', ')}
+                  {movieDetails.production_companies.map((company) => company.name).join(', ')}
                 </p>
               )}
               {movieDetails.imdb_id !== null && (

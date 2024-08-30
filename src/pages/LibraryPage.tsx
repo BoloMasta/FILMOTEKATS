@@ -1,56 +1,53 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { getQueue, getWatched } from "../utils/storageUtils";
-import Gallery from "../components/Gallery/Gallery";
-import Pagination from "../components/Pagination/Pagination";
-import { MinimalMovie } from "../ts/types/movieTypes";
-import "./pagesStyles.scss";
-
-const ITEMS_PER_PAGE = 20;
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useStore } from '../utils/store';
+import Gallery from '../components/Gallery/Gallery';
+import Pagination from '../components/Pagination/Pagination';
+import './pagesStyles.scss';
 
 const LibraryPage: React.FC = () => {
   const { view } = useParams<{ view?: string }>();
-  const [currentView, setCurrentView] = useState<"queue" | "watched">("queue");
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(0);
-  const [currentMovies, setCurrentMovies] = useState<MinimalMovie[]>([]);
+  const {
+    currentPage,
+    totalPages,
+    movies,
+    setView,
+    setPage,
+    loadMovies,
+    view: currentView,
+  } = useStore((state) => ({
+    view: state.view,
+    movies: state.movies,
+    totalPages: state.totalPages,
+    currentPage: state.currentPage,
+    setView: state.setView,
+    setPage: state.setPage,
+    loadMovies: state.loadMovies,
+  }));
 
-  // Effect to handle view change based on URL parameter
+  // Efekt do ustawienia widoku na podstawie URL parameter
   useEffect(() => {
-    if (view === "queue" || view === "watched") {
-      setCurrentView(view);
+    if (view === 'queue' || view === 'watched') {
+      setView(view);
     }
-  }, [view]);
+  }, [view, setView]);
 
-  // Effect to fetch and set movies based on current view and page
+  // Efekt do ładowania filmów na podstawie aktualnego widoku i strony
   useEffect(() => {
-    const fetchMovies = () => {
-      let moviesList: MinimalMovie[] = [];
-      if (currentView === "queue") {
-        moviesList = getQueue();
-      } else if (currentView === "watched") {
-        moviesList = getWatched();
-      }
+    loadMovies();
+  }, [currentView, currentPage, loadMovies]);
 
-      const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-      const endIndex = startIndex + ITEMS_PER_PAGE;
-      setCurrentMovies(moviesList.slice(startIndex, endIndex));
-      setTotalPages(Math.ceil(moviesList.length / ITEMS_PER_PAGE));
-    };
-
-    fetchMovies();
-  }, [currentView, currentPage]);
-
+  // Obsługuje zmianę strony
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    setPage(page);
   };
 
   return (
     <>
       <h2 className="pageHeaderStyle">
-        {currentView === "queue" ? "Movie Queue" : "Watched Movies"}
+        {currentView === 'queue' ? 'Movie Queue' : 'Watched Movies'}
       </h2>
-      <Gallery movies={currentMovies} />
+      <Gallery movies={movies} />
       {totalPages > 1 && (
         <Pagination
           currentPage={currentPage}

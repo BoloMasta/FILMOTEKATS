@@ -1,14 +1,24 @@
-import { MinimalMovie } from "./../ts/types/movieTypes";
+import { MinimalMovie } from './../ts/types/movieTypes';
 
-const QUEUE_KEY = "movieQueue";
-const WATCHED_KEY = "watchedMovies";
+const QUEUE_KEY = 'movieQueue';
+const WATCHED_KEY = 'watchedMovies';
 
 const getFromStorage = (key: string): MinimalMovie[] => {
-  return JSON.parse(localStorage.getItem(key) || "[]");
+  try {
+    const storedData = localStorage.getItem(key);
+    return storedData ? JSON.parse(storedData) : [];
+  } catch (error) {
+    console.error(`Error getting ${key} from storage`, error);
+    return [];
+  }
 };
 
 const saveToStorage = (key: string, data: MinimalMovie[]) => {
-  localStorage.setItem(key, JSON.stringify(data));
+  try {
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch (error) {
+    console.error(`Error saving ${key} to storage`, error);
+  }
 };
 
 const addMovie = (key: string, movie: MinimalMovie) => {
@@ -37,6 +47,7 @@ export const getQueue = (): MinimalMovie[] => getFromStorage(QUEUE_KEY);
 export const getWatched = (): MinimalMovie[] => getFromStorage(WATCHED_KEY);
 
 export const isMovieInQueue = (movie: MinimalMovie): boolean =>
-  getQueue().some((item) => item.id === movie.id);
+  getFromStorage(QUEUE_KEY).some((item) => item.id === movie.id);
+
 export const isMovieInWatched = (movie: MinimalMovie): boolean =>
-  getWatched().some((item) => item.id === movie.id);
+  getFromStorage(WATCHED_KEY).some((item) => item.id === movie.id);

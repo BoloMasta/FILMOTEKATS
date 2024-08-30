@@ -1,10 +1,10 @@
-import React, { lazy } from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
-import Layout from "./layout/Layout";
+import React, { lazy } from 'react';
+import { Route, Routes, Navigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import Layout from './layout/Layout';
 
-const HomePage = lazy(() => import("./pages/HomePage"));
-const LibraryPage = lazy(() => import("./pages/LibraryPage"));
+const HomePage = lazy(() => import('./pages/HomePage'));
+const LibraryPage = lazy(() => import('./pages/LibraryPage'));
 
 const App: React.FC = () => {
   return (
