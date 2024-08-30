@@ -10,7 +10,7 @@ import {
 } from './../utils/storageUtils';
 
 interface Store {
-  view: 'queue' | 'watched';
+  view: 'queue' | 'watched' | null;
   movies: MinimalMovie[];
   totalPages: number;
   currentPage: number;
@@ -18,7 +18,7 @@ interface Store {
   query: string;
   setCategory: (category: 'popular' | 'top_rated' | 'upcoming' | 'search') => void;
   setQuery: (query: string) => void;
-  setView: (view: 'queue' | 'watched') => void;
+  setView: (view: 'queue' | 'watched' | null) => void;
   setPage: (page: number) => void;
   loadMovies: () => void;
   addToQueue: (movie: MinimalMovie) => void;

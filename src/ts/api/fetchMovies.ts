@@ -13,15 +13,12 @@ export class FetchApiMovies {
       params: {
         api_key: apiKey,
         language: 'en-US',
-        include_adult: true,
+        include_adult: false,
       },
     });
   }
 
-  private async fetchData<T>(
-    url: string,
-    params?: object
-  ): Promise<T | undefined> {
+  private async fetchData<T>(url: string, params?: object): Promise<T | undefined> {
     try {
       const response: AxiosResponse<T> = await this.axiosInstance.get(url, {
         params,
@@ -36,10 +33,7 @@ export class FetchApiMovies {
     return this.fetchData<MovieListResponse>('/trending/movie/day', { page });
   }
 
-  getSearch(
-    query: string,
-    page: number
-  ): Promise<MovieListResponse | undefined> {
+  getSearch(query: string, page: number): Promise<MovieListResponse | undefined> {
     return this.fetchData<MovieListResponse>('/search/movie', { query, page });
   }
 
