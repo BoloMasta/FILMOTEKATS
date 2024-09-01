@@ -1,8 +1,10 @@
 import { useEffect, useState, useCallback } from 'react';
 import { FetchApiMovies } from '../../ts/api/fetchMovies';
+import { Img } from 'react-image';
 import SVG from 'react-inlinesvg';
 import Button from '../Button/Button';
 import MovieActionButtons from '../MovieActionButtons/MovieActionButtons';
+import Loader from '../../layout/Loader/Loader';
 import Gallery from '../Gallery/Gallery';
 import Pagination from '../Pagination/Pagination';
 import { MinimalMovie, MovieDetails } from '../../ts/types/movieTypes';
@@ -19,6 +21,7 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
   const [similarCurrentPage, setSimilarCurrentPage] = useState<number>(1);
   const [similarTotalPages, setSimilarTotalPages] = useState<number>(0);
   const [isSimilarVisible, setIsSimilarVisible] = useState<boolean>(false);
+  const [isSimilarLoading, setIsSimilarLoading] = useState<boolean>(true);
 
   const { toggleQueueStatus, toggleWatchedStatus, isMovieInList } = useStore((state) => ({
     toggleQueueStatus: state.toggleQueueStatus,
@@ -31,6 +34,7 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
+      setIsSimilarLoading(true);
       const api = new FetchApiMovies();
       try {
         const details = await api.getMovieDetails(movieId);
@@ -41,6 +45,8 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
         }
       } catch (error) {
         console.error('Failed to fetch movie details:', error);
+      } finally {
+        setIsSimilarLoading(false);
       }
     };
 
@@ -178,7 +184,7 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
           X
         </button>
         <div className={styles.movieDetails}>
-          <img
+          {/* <img
             src={
               movieDetails.poster_path
                 ? `https://image.tmdb.org/t/p/w500${movieDetails.poster_path}`
@@ -186,6 +192,21 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
             }
             alt={movieDetails.title}
             className={styles.moviePoster}
+          /> */}
+
+          <Img
+            src={
+              movieDetails.poster_path
+                ? `https://image.tmdb.org/t/p/w500${movieDetails.poster_path}`
+                : noPoster
+            }
+            alt={movieDetails.title}
+            className={styles.moviePoster}
+            loader={
+              <div className={styles.loaderWrapper}>
+                <Loader />
+              </div>
+            }
           />
 
           <div className={styles.movieInfo}>
@@ -211,19 +232,21 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
               </p>
             )}
 
-            <Button
-              onClick={() => setIsDetailsVisible(!isDetailsVisible)}
-              label={isDetailsVisible ? 'Show Less' : 'More Info'}
-              variant="tertiary"
-              className={styles.moreInfoButton}
-            />
+            <div className={styles.buttonsContainer}>
+              <Button
+                onClick={() => setIsDetailsVisible(!isDetailsVisible)}
+                label={isDetailsVisible ? 'Show Less' : 'More Info'}
+                variant="tertiary"
+                className={styles.moreInfoButton}
+              />
 
-            <Button
-              onClick={() => setIsSimilarVisible(!isSimilarVisible)}
-              label={isSimilarVisible ? 'Hide similar' : 'Show similar'}
-              variant="tertiary"
-              className={styles.moreInfoButton}
-            />
+              <Button
+                onClick={() => setIsSimilarVisible(!isSimilarVisible)}
+                label={isSimilarVisible ? 'Hide similar' : 'Show similar'}
+                variant="tertiary"
+                className={styles.moreInfoButton}
+              />
+            </div>
 
             <div
               className={`${styles.additionalDetails} ${
@@ -285,15 +308,22 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
             </div>
 
             <div
-              className={`${styles.similarMovies} ${isSimilarVisible ? styles.detailsVisible : ''}`}
-              // ref={detailsRef}
+              className={`${styles.similarMovies} ${isSimilarVisible ? styles.similarVisible : ''}`}
             >
-              <Gallery movies={visibleSimilarMovies} />
-              <Pagination
-                currentPage={similarCurrentPage}
-                totalPages={similarTotalPages}
-                onPageChange={handlePageChange}
-              />
+              {isSimilarLoading ? (
+                <div className={styles.loaderWrapper}>
+                  <Loader /> {/* Loader widoczny podczas ładowania */}
+                </div>
+              ) : (
+                <>
+                  <Gallery movies={visibleSimilarMovies} variant="small" />
+                  <Pagination
+                    currentPage={similarCurrentPage}
+                    totalPages={similarTotalPages}
+                    onPageChange={handlePageChange}
+                  />
+                </>
+              )}
             </div>
 
             <MovieActionButtons

@@ -17,6 +17,7 @@ export interface SwitchProps {
 
 export interface GalleryProps {
   movies: MinimalMovie[];
+  variant?: 'standard' | 'small';
 }
 
 export type PaginationProps = {

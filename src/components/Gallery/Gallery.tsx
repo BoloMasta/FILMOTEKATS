@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { Img } from 'react-image';
 import { GalleryProps } from '../../ts/types/componentProps';
 import noPoster from '../../images/no-poster.jpg';
+import Loader from '../../layout/Loader/Loader';
 import styles from './Gallery.module.scss';
 import MovieModal from '../MovieModal/MovieModal';
 
-const Gallery: React.FC<GalleryProps> = ({ movies }) => {
+const Gallery: React.FC<GalleryProps> = ({ movies, variant = 'standard' }) => {
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
 
   const handleMovieClick = (movieId: number) => {
@@ -15,24 +17,35 @@ const Gallery: React.FC<GalleryProps> = ({ movies }) => {
     setSelectedMovieId(null);
   };
 
+  const galleryClass = variant === 'small' ? styles.gallerySmall : styles.gallery;
+  const movieItemClass = variant === 'small' ? styles.movieItemSmall : styles.movieItem;
+
   return (
     <>
-      <div className={styles.gallery}>
+      <div className={galleryClass}>
         {movies.length > 0 ? (
           movies.map((movie) => (
             <div
               key={movie.id}
-              className={styles.movieItem}
+              className={movieItemClass}
               onClick={() => handleMovieClick(movie.id)}
             >
-              <img
-                src={
-                  movie.poster_path
-                    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                    : noPoster
-                }
-                alt={movie.title}
-              />
+              <div className={styles.imageWrapper}>
+                <Img
+                  src={
+                    movie.poster_path
+                      ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                      : noPoster
+                  }
+                  alt={movie.title}
+                  className={styles.movieImage}
+                  loader={
+                    <div className={styles.loaderWrapper}>
+                      <Loader />
+                    </div>
+                  } // Załadowanie komponentu Loader
+                />
+              </div>
               <h3>{movie.title}</h3>
             </div>
           ))

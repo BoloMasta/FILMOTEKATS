@@ -186,6 +186,12 @@
   }
 }
 
+.buttonsContainer {
+  display: flex;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
 .moreInfoButton {
   width: 120px;
   height: 40px;
@@ -256,9 +262,30 @@
 }
 
 .similarMovies {
+  position: relative;
+  max-height: 0;
+  padding: 0;
+  overflow: hidden;
+  overflow-y: scroll;
+  transition:
+    max-height 0.3s ease,
+    padding 0.3s ease;
+
+  &.similarVisible {
+    max-height: 400px;
+    padding: 1rem;
+  }
+}
+
+.loaderWrapper {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
   width: 100%;
-  height: 300px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: var(--background); // Możesz dostosować kolor tła
+  z-index: 10; // Zapewnia, że loader jest na wierzchu
 }
