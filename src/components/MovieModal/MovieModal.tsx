@@ -5,7 +5,7 @@ import Button from '../Button/Button';
 import MovieActionButtons from '../MovieActionButtons/MovieActionButtons';
 import { MovieDetails } from '../../ts/types/movieTypes';
 import { MovieModalProps } from '../../ts/types/componentProps';
-import { useStore } from '../../utils/store'; // Importuj useStore
+import { useStore } from '../../utils/store';
 import noPoster from '../../images/no-poster.jpg';
 import styles from './MovieModal.module.scss';
 
@@ -13,21 +13,11 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
   const [movieDetails, setMovieDetails] = useState<MovieDetails | null>(null);
   const [isDetailsVisible, setIsDetailsVisible] = useState<boolean>(false);
 
-  // Dostęp do metod i stanu z useStore
-  const {
-    addToQueue,
-    removeFromQueue,
-    addToWatched,
-    removeFromWatched,
-    isMovieInQueue,
-    isMovieInWatched,
-  } = useStore((state) => ({
-    addToQueue: state.addToQueue,
-    removeFromQueue: state.removeFromQueue,
-    addToWatched: state.addToWatched,
-    removeFromWatched: state.removeFromWatched,
-    isMovieInQueue: state.isMovieInQueue,
-    isMovieInWatched: state.isMovieInWatched,
+  // Pobieranie funkcji bezpośrednio ze store
+  const { toggleQueueStatus, toggleWatchedStatus, isMovieInList } = useStore((state) => ({
+    toggleQueueStatus: state.toggleQueueStatus,
+    toggleWatchedStatus: state.toggleWatchedStatus,
+    isMovieInList: state.isMovieInList,
   }));
 
   const [inQueue, setInQueue] = useState<boolean>(false);
@@ -40,26 +30,16 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
         const details = await api.getMovieDetails(movieId);
         if (details) {
           setMovieDetails(details);
-          setInQueue(isMovieInQueue(details));
-          setInWatched(isMovieInWatched(details));
-        } else {
-          setMovieDetails(null);
+          setInQueue(isMovieInList(details, 'queue'));
+          setInWatched(isMovieInList(details, 'watched'));
         }
       } catch (error) {
         console.error('Failed to fetch movie details:', error);
-        setMovieDetails(null);
       }
     };
 
     fetchMovieDetails();
-  }, [movieId, isMovieInQueue, isMovieInWatched]);
-
-  useEffect(() => {
-    if (movieDetails) {
-      setInQueue(isMovieInQueue(movieDetails));
-      setInWatched(isMovieInWatched(movieDetails));
-    }
-  }, [movieDetails, isMovieInQueue, isMovieInWatched]);
+  }, [movieId, isMovieInList]);
 
   const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (event.target === event.currentTarget) {
@@ -81,40 +61,40 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
 
   const onAddToQueue = useCallback(() => {
     if (movieDetails) {
-      addToQueue(movieDetails);
+      toggleQueueStatus(movieDetails, true);
       setInQueue(true);
     }
-  }, [movieDetails, addToQueue]);
+  }, [movieDetails, toggleQueueStatus]);
 
   const onRemoveFromQueue = useCallback(() => {
     if (movieDetails) {
-      removeFromQueue(movieDetails);
+      toggleQueueStatus(movieDetails, false);
       setInQueue(false);
     }
-  }, [movieDetails, removeFromQueue]);
+  }, [movieDetails, toggleQueueStatus]);
 
   const onAddToWatched = useCallback(() => {
     if (movieDetails) {
-      addToWatched(movieDetails);
+      toggleWatchedStatus(movieDetails, true);
       setInWatched(true);
     }
-  }, [movieDetails, addToWatched]);
+  }, [movieDetails, toggleWatchedStatus]);
 
   const onRemoveFromWatched = useCallback(() => {
     if (movieDetails) {
-      removeFromWatched(movieDetails);
+      toggleWatchedStatus(movieDetails, false);
       setInWatched(false);
     }
-  }, [movieDetails, removeFromWatched]);
+  }, [movieDetails, toggleWatchedStatus]);
 
   const moveToWatched = useCallback(() => {
     if (movieDetails) {
-      removeFromQueue(movieDetails);
-      addToWatched(movieDetails);
+      toggleQueueStatus(movieDetails, false);
+      toggleWatchedStatus(movieDetails, true);
       setInQueue(false);
       setInWatched(true);
     }
-  }, [movieDetails, removeFromQueue, addToWatched]);
+  }, [movieDetails, toggleQueueStatus, toggleWatchedStatus]);
 
   const formatRuntime = (runtime: number) => {
     const hours = Math.floor(runtime / 60);

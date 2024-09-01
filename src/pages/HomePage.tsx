@@ -15,11 +15,12 @@ const HomePage: React.FC = () => {
 
   const [searchParams, setSearchParams] = useSearchParams(); // Użyj useSearchParams
 
-  const { category, query, setCategory, setQuery } = useStore((state) => ({
+  const { category, query, setCategory, setQuery, adults } = useStore((state) => ({
     category: state.category,
     query: state.query,
     setCategory: state.setCategory,
     setQuery: state.setQuery,
+    adults: state.adults,
   }));
 
   const fetchMovies = useCallback(
@@ -64,7 +65,7 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     fetchMovies(currentPage, category, query);
-  }, [currentPage, category, query, fetchMovies]);
+  }, [currentPage, category, query, fetchMovies, adults]);
 
   const handlePageChange = (page: number) => {
     console.log(`Page change: new page=${page}`);

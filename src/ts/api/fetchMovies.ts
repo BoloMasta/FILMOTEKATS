@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { MovieListResponse, GenresIdsListResponse } from '../types/apiTypes';
 import { MovieDetails } from '../types/movieTypes';
+import { useStore } from './../../utils/store';
 
 const apiKey = '92be59e0090ddfe5570b8756c403476a';
 
@@ -13,15 +14,16 @@ export class FetchApiMovies {
       params: {
         api_key: apiKey,
         language: 'en-US',
-        include_adult: false,
       },
     });
   }
 
-  private async fetchData<T>(url: string, params?: object): Promise<T | undefined> {
+  private async fetchData<T>(url: string, additionalParams: object = {}): Promise<T | undefined> {
+    const { adults } = useStore.getState(); // Pobierz aktualną wartość adults ze store
+
     try {
       const response: AxiosResponse<T> = await this.axiosInstance.get(url, {
-        params,
+        params: { include_adult: adults, ...additionalParams },
       });
       return response.data;
     } catch (error) {
@@ -59,12 +61,11 @@ export class FetchApiMovies {
 
   getUpcoming(page: number): Promise<MovieListResponse | undefined> {
     const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
-    const queryParams = {
+    return this.fetchData<MovieListResponse>('/discover/movie', {
       page,
       'primary_release_date.gte': today,
       sort_by: 'primary_release_date.asc', // Sort results by release date in ascending order
-    };
-    return this.fetchData<MovieListResponse>('/discover/movie', queryParams);
+    });
   }
 
   getGenresIdsList(): Promise<GenresIdsListResponse | undefined> {

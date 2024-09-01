@@ -1,17 +1,20 @@
-import { MinimalMovie } from "./movieTypes";
+import { MinimalMovie } from './movieTypes';
 
 export type ButtonProps = {
   onClick: () => void;
   label: string;
   className?: string;
   disabled?: boolean;
-  variant?: "primary" | "secondary" | "tertiary";
+  variant?: 'primary' | 'secondary' | 'tertiary';
 };
 
-export interface ThemeSwitchProps {
-  isDarkTheme: boolean;
-  onToggleTheme: () => void;
+export interface SwitchProps {
+  label: string;
+  isChecked: boolean;
+  onToggle: () => void;
+  dataAttribute?: string;
 }
+
 export interface GalleryProps {
   movies: MinimalMovie[];
 }
