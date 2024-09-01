@@ -3,7 +3,9 @@ import { FetchApiMovies } from '../../ts/api/fetchMovies';
 import SVG from 'react-inlinesvg';
 import Button from '../Button/Button';
 import MovieActionButtons from '../MovieActionButtons/MovieActionButtons';
-import { MovieDetails } from '../../ts/types/movieTypes';
+import Gallery from '../Gallery/Gallery';
+import Pagination from '../Pagination/Pagination';
+import { MinimalMovie, MovieDetails } from '../../ts/types/movieTypes';
 import { MovieModalProps } from '../../ts/types/componentProps';
 import { useStore } from '../../utils/store';
 import noPoster from '../../images/no-poster.jpg';
@@ -12,8 +14,12 @@ import styles from './MovieModal.module.scss';
 const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
   const [movieDetails, setMovieDetails] = useState<MovieDetails | null>(null);
   const [isDetailsVisible, setIsDetailsVisible] = useState<boolean>(false);
+  const [similarMovies, setSimilarMovies] = useState<MinimalMovie[]>([]);
+  const [visibleSimilarMovies, setVisibleSimilarMovies] = useState<MinimalMovie[]>([]);
+  const [similarCurrentPage, setSimilarCurrentPage] = useState<number>(1);
+  const [similarTotalPages, setSimilarTotalPages] = useState<number>(0);
+  const [isSimilarVisible, setIsSimilarVisible] = useState<boolean>(false);
 
-  // Pobieranie funkcji bezpośrednio ze store
   const { toggleQueueStatus, toggleWatchedStatus, isMovieInList } = useStore((state) => ({
     toggleQueueStatus: state.toggleQueueStatus,
     toggleWatchedStatus: state.toggleWatchedStatus,
@@ -40,6 +46,63 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
 
     fetchMovieDetails();
   }, [movieId, isMovieInList]);
+
+  // if (isSimilarVisible) {
+  //   const fetchSimilarMovies = async () => {
+  //     const api = new FetchApiMovies();
+  //     try {
+  //       const similarMovies = await api.getSimilar(movieId);
+
+  //       console.log('Similar movies found in list of movies:', similarMovies.results);
+  //     } catch (error) {
+  //       console.error('Failed to fetch similar movies:', error);
+  //     }
+  //   };
+
+  //   fetchSimilarMovies();
+  // }
+
+  const fetchSimilarMovies = useCallback(
+    async (movieId: number) => {
+      const api = new FetchApiMovies();
+
+      try {
+        const data = await api.getSimilar(movieId);
+
+        if (data && data.results) {
+          // Ogranicz liczbę wyników do 20
+          const limitedResults = data.results.slice(0, 20);
+          const totalMovies = limitedResults.length;
+
+          // Ustal liczbę stron: 1 strona na każde 4 filmy
+          const maxPages = Math.ceil(totalMovies / 4);
+
+          // Ustaw filmy i liczbę stron w stanie
+          setSimilarMovies(limitedResults);
+          setSimilarTotalPages(maxPages);
+
+          console.log(`Fetched ${totalMovies} similar movies.`);
+        }
+      } catch (error) {
+        console.error('Failed to fetch similar movies:', error);
+      }
+    },
+    [movieId]
+  );
+
+  // Aktualizuj widoczne filmy po zmianie currentPage lub similarMovies
+  useEffect(() => {
+    const startIndex = (similarCurrentPage - 1) * 4;
+    const endIndex = similarCurrentPage * 4;
+    setVisibleSimilarMovies(similarMovies.slice(startIndex, endIndex));
+  }, [similarCurrentPage, similarMovies, isSimilarVisible]);
+
+  // Wywołanie fetchSimilarMovies np. w useEffect
+  useEffect(() => {
+    if (isSimilarVisible) {
+      fetchSimilarMovies(movieId);
+    }
+  }, [isSimilarVisible]);
 
   const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (event.target === event.currentTarget) {
@@ -102,6 +165,10 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
     return `${hours}h ${minutes}min`;
   };
 
+  const handlePageChange = (page: number) => {
+    setSimilarCurrentPage(page);
+  };
+
   if (!movieDetails) return null;
 
   return (
@@ -147,6 +214,13 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
             <Button
               onClick={() => setIsDetailsVisible(!isDetailsVisible)}
               label={isDetailsVisible ? 'Show Less' : 'More Info'}
+              variant="tertiary"
+              className={styles.moreInfoButton}
+            />
+
+            <Button
+              onClick={() => setIsSimilarVisible(!isSimilarVisible)}
+              label={isSimilarVisible ? 'Hide similar' : 'Show similar'}
               variant="tertiary"
               className={styles.moreInfoButton}
             />
@@ -208,6 +282,18 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
                   Visit Website
                 </a>
               )}
+            </div>
+
+            <div
+              className={`${styles.similarMovies} ${isSimilarVisible ? styles.detailsVisible : ''}`}
+              // ref={detailsRef}
+            >
+              <Gallery movies={visibleSimilarMovies} />
+              <Pagination
+                currentPage={similarCurrentPage}
+                totalPages={similarTotalPages}
+                onPageChange={handlePageChange}
+              />
             </div>
 
             <MovieActionButtons

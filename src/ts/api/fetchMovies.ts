@@ -47,8 +47,8 @@ export class FetchApiMovies {
     return this.fetchData<MovieDetails>(`/movie/${movie_id}/keywords`);
   }
 
-  getSimilar(movie_id: number): Promise<MovieDetails | undefined> {
-    return this.fetchData<MovieDetails>(`/movie/${movie_id}/similar`);
+  getSimilar(movie_id: number): Promise<MovieListResponse | undefined> {
+    return this.fetchData<MovieListResponse>(`/movie/${movie_id}/similar`);
   }
 
   getReviews(movie_id: number): Promise<MovieDetails | undefined> {

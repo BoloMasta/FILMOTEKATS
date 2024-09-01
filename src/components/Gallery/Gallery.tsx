@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { GalleryProps } from "../../ts/types/componentProps";
-import noPoster from "../../images/no-poster.jpg";
-import styles from "./Gallery.module.scss";
-import MovieModal from "../MovieModal/MovieModal";
+import { useState } from 'react';
+import { GalleryProps } from '../../ts/types/componentProps';
+import noPoster from '../../images/no-poster.jpg';
+import styles from './Gallery.module.scss';
+import MovieModal from '../MovieModal/MovieModal';
 
 const Gallery: React.FC<GalleryProps> = ({ movies }) => {
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
@@ -16,7 +16,7 @@ const Gallery: React.FC<GalleryProps> = ({ movies }) => {
   };
 
   return (
-    <div>
+    <>
       <div className={styles.gallery}>
         {movies.length > 0 ? (
           movies.map((movie) => (
@@ -42,7 +42,7 @@ const Gallery: React.FC<GalleryProps> = ({ movies }) => {
       </div>
 
       {selectedMovieId && <MovieModal movieId={selectedMovieId} onClose={handleCloseModal} />}
-    </div>
+    </>
   );
 };
 
