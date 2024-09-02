@@ -10,6 +10,7 @@ import Gallery from '../Gallery/Gallery';
 import Pagination from '../Pagination/Pagination';
 import { MinimalMovie, MovieDetails } from '../../ts/types/movieTypes';
 import { MovieModalProps } from '../../ts/types/componentProps';
+import { Image } from '../../ts/types/commonTypes';
 import { useStore } from '../../utils/store';
 import noPoster from '../../images/no-poster.jpg';
 import styles from './MovieModal.module.scss';
@@ -23,6 +24,8 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
   const [similarTotalPages, setSimilarTotalPages] = useState<number>(0);
   const [isSimilarVisible, setIsSimilarVisible] = useState<boolean>(false);
   const [isSimilarLoading, setIsSimilarLoading] = useState<boolean>(true);
+  const [images, setImages] = useState<Image[]>([]);
+  const [isImagesVisible, setIsImagesVisible] = useState<boolean>(false);
 
   const { toggleQueueStatus, toggleWatchedStatus, isMovieInList } = useStore((state) => ({
     toggleQueueStatus: state.toggleQueueStatus,
@@ -87,6 +90,31 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
     }
   }, [isSimilarVisible, fetchSimilarMovies, movieId]);
 
+  const fetchImages = useCallback(
+    async (movieId: number) => {
+      const api = new FetchApiMovies();
+
+      try {
+        const data = await api.getImages(movieId);
+        console.log(data);
+        if (data && data.backdrops && data.backdrops.length > 0) {
+          setImages(data.backdrops);
+        }
+      } catch (error) {
+        console.error('Failed to fetch movie images:', error);
+      } finally {
+        console.log('Images fetched', images);
+      }
+    },
+    [images]
+  );
+
+  useEffect(() => {
+    if (isImagesVisible) {
+      fetchImages(movieId);
+    }
+  }, [isImagesVisible]);
+
   const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (event.target === event.currentTarget) {
       onClose();
@@ -104,6 +132,34 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [onClose]);
+
+  const toggleDetailsVisibility = () => {
+    setIsDetailsVisible((prev) => {
+      if (prev) {
+        setIsSimilarVisible(false);
+        return false;
+      } else {
+        setIsSimilarVisible(false);
+        return true;
+      }
+    });
+  };
+
+  const toggleSimilarVisibility = () => {
+    setIsSimilarVisible((prev) => {
+      if (prev) {
+        setIsDetailsVisible(false);
+        return false;
+      } else {
+        setIsDetailsVisible(false);
+        return true;
+      }
+    });
+  };
+
+  const toogleImagesVisibility = () => {
+    setIsImagesVisible((prev) => !prev);
+  };
 
   const onAddToQueue = useCallback(() => {
     if (movieDetails) {
@@ -197,16 +253,21 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
 
             <div className={styles.buttonsContainer}>
               <Button
-                onClick={() => setIsDetailsVisible(!isDetailsVisible)}
+                onClick={toggleDetailsVisibility}
                 label={isDetailsVisible ? 'Show Less' : 'More Info'}
-                variant="tertiary"
+                variant={isDetailsVisible ? 'secondary' : 'tertiary'}
                 className={styles.moreInfoButton}
               />
-
               <Button
-                onClick={() => setIsSimilarVisible(!isSimilarVisible)}
+                onClick={toggleSimilarVisibility}
                 label={isSimilarVisible ? 'Hide similar' : 'Show similar'}
-                variant="tertiary"
+                variant={isSimilarVisible ? 'secondary' : 'tertiary'}
+                className={styles.moreInfoButton}
+              />
+              <Button
+                onClick={toogleImagesVisibility}
+                label={isImagesVisible ? 'Hide images' : 'Show images'}
+                variant={isImagesVisible ? 'secondary' : 'tertiary'}
                 className={styles.moreInfoButton}
               />
             </div>

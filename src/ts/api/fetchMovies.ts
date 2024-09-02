@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import { MovieListResponse, GenresIdsListResponse } from '../types/apiTypes';
+import { MovieListResponse, GenresIdsListResponse, MovieImagesResponse } from '../types/apiTypes';
 import { MovieDetails } from '../types/movieTypes';
 import { useStore } from './../../utils/store';
 
@@ -11,20 +11,23 @@ export class FetchApiMovies {
   constructor() {
     this.axiosInstance = axios.create({
       baseURL: 'https://api.themoviedb.org/3',
-      params: {
-        api_key: apiKey,
-        language: 'en-US',
-      },
     });
   }
 
-  private async fetchData<T>(url: string, additionalParams: object = {}): Promise<T | undefined> {
-    const { adults } = useStore.getState(); // Pobierz aktualną wartość adults ze store
+  private async fetchData<T>(
+    url: string,
+    additionalParams: object = {},
+    includeDefaults: boolean = true
+  ): Promise<T | undefined> {
+    let params: { [key: string]: string | boolean } = { api_key: apiKey, ...additionalParams };
+
+    if (includeDefaults) {
+      const { adults } = useStore.getState(); // Pobierz aktualną wartość adults ze store
+      params = { ...params, language: 'en-US', include_adult: adults };
+    }
 
     try {
-      const response: AxiosResponse<T> = await this.axiosInstance.get(url, {
-        params: { include_adult: adults, ...additionalParams },
-      });
+      const response: AxiosResponse<T> = await this.axiosInstance.get(url, { params });
       return response.data;
     } catch (error) {
       console.error('Opss, something went wrong', error);
@@ -53,6 +56,11 @@ export class FetchApiMovies {
 
   getReviews(movie_id: number): Promise<MovieDetails | undefined> {
     return this.fetchData<MovieDetails>(`/movie/${movie_id}/reviews`);
+  }
+
+  // W tej metodzie skipujemy domyślne parametry (language, adults)
+  getImages(movie_id: number): Promise<MovieImagesResponse | undefined> {
+    return this.fetchData<MovieImagesResponse>(`/movie/${movie_id}/images`, {}, false);
   }
 
   getTopRated(page: number): Promise<MovieListResponse | undefined> {

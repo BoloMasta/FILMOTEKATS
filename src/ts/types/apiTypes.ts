@@ -1,5 +1,5 @@
-import { Genre } from "./commonTypes";
-import { MinimalMovie } from "./movieTypes";
+import { Genre, Image } from './commonTypes';
+import { MinimalMovie } from './movieTypes';
 
 export interface MovieListResponse {
   page: number;
@@ -10,4 +10,8 @@ export interface MovieListResponse {
 
 export interface GenresIdsListResponse {
   genres: Genre[];
+}
+
+export interface MovieImagesResponse {
+  backdrops: Image[];
 }
