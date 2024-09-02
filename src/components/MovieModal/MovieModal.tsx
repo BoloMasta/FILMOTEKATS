@@ -3,6 +3,7 @@ import { FetchApiMovies } from '../../ts/api/fetchMovies';
 import { Img } from 'react-image';
 import SVG from 'react-inlinesvg';
 import Button from '../Button/Button';
+import MovieAdditionalDetails from '../MovieAdditionalDetails/MovieAdditionalDetails';
 import MovieActionButtons from '../MovieActionButtons/MovieActionButtons';
 import Loader from '../../layout/Loader/Loader';
 import Gallery from '../Gallery/Gallery';
@@ -53,62 +54,38 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
     fetchMovieDetails();
   }, [movieId, isMovieInList]);
 
-  // if (isSimilarVisible) {
-  //   const fetchSimilarMovies = async () => {
-  //     const api = new FetchApiMovies();
-  //     try {
-  //       const similarMovies = await api.getSimilar(movieId);
+  const fetchSimilarMovies = useCallback(async (movieId: number) => {
+    const api = new FetchApiMovies();
 
-  //       console.log('Similar movies found in list of movies:', similarMovies.results);
-  //     } catch (error) {
-  //       console.error('Failed to fetch similar movies:', error);
-  //     }
-  //   };
+    try {
+      const data = await api.getSimilar(movieId);
 
-  //   fetchSimilarMovies();
-  // }
+      if (data && data.results) {
+        const limitedResults = data.results.slice(0, 20);
+        const totalMovies = limitedResults.length;
+        const maxPages = Math.ceil(totalMovies / 4);
 
-  const fetchSimilarMovies = useCallback(
-    async (movieId: number) => {
-      const api = new FetchApiMovies();
+        setSimilarMovies(limitedResults);
+        setSimilarTotalPages(maxPages);
 
-      try {
-        const data = await api.getSimilar(movieId);
-
-        if (data && data.results) {
-          // Ogranicz liczbę wyników do 20
-          const limitedResults = data.results.slice(0, 20);
-          const totalMovies = limitedResults.length;
-
-          // Ustal liczbę stron: 1 strona na każde 4 filmy
-          const maxPages = Math.ceil(totalMovies / 4);
-
-          // Ustaw filmy i liczbę stron w stanie
-          setSimilarMovies(limitedResults);
-          setSimilarTotalPages(maxPages);
-
-          console.log(`Fetched ${totalMovies} similar movies.`);
-        }
-      } catch (error) {
-        console.error('Failed to fetch similar movies:', error);
+        console.log(`Fetched ${totalMovies} similar movies.`);
       }
-    },
-    [movieId]
-  );
+    } catch (error) {
+      console.error('Failed to fetch similar movies:', error);
+    }
+  }, []);
 
-  // Aktualizuj widoczne filmy po zmianie currentPage lub similarMovies
   useEffect(() => {
     const startIndex = (similarCurrentPage - 1) * 4;
     const endIndex = similarCurrentPage * 4;
     setVisibleSimilarMovies(similarMovies.slice(startIndex, endIndex));
   }, [similarCurrentPage, similarMovies, isSimilarVisible]);
 
-  // Wywołanie fetchSimilarMovies np. w useEffect
   useEffect(() => {
     if (isSimilarVisible) {
       fetchSimilarMovies(movieId);
     }
-  }, [isSimilarVisible]);
+  }, [isSimilarVisible, fetchSimilarMovies, movieId]);
 
   const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (event.target === event.currentTarget) {
@@ -165,12 +142,6 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
     }
   }, [movieDetails, toggleQueueStatus, toggleWatchedStatus]);
 
-  const formatRuntime = (runtime: number) => {
-    const hours = Math.floor(runtime / 60);
-    const minutes = runtime % 60;
-    return `${hours}h ${minutes}min`;
-  };
-
   const handlePageChange = (page: number) => {
     setSimilarCurrentPage(page);
   };
@@ -184,30 +155,22 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
           X
         </button>
         <div className={styles.movieDetails}>
-          {/* <img
-            src={
-              movieDetails.poster_path
-                ? `https://image.tmdb.org/t/p/w500${movieDetails.poster_path}`
-                : noPoster
-            }
-            alt={movieDetails.title}
-            className={styles.moviePoster}
-          /> */}
-
-          <Img
-            src={
-              movieDetails.poster_path
-                ? `https://image.tmdb.org/t/p/w500${movieDetails.poster_path}`
-                : noPoster
-            }
-            alt={movieDetails.title}
-            className={styles.moviePoster}
-            loader={
-              <div className={styles.loaderWrapper}>
-                <Loader />
-              </div>
-            }
-          />
+          <div className={styles.imageWrapper}>
+            <Img
+              src={
+                movieDetails.poster_path
+                  ? `https://image.tmdb.org/t/p/w500${movieDetails.poster_path}`
+                  : noPoster
+              }
+              alt={movieDetails.title}
+              className={styles.moviePoster}
+              loader={
+                <div className={styles.loaderWrapper}>
+                  <Loader />
+                </div>
+              }
+            />
+          </div>
 
           <div className={styles.movieInfo}>
             <h2 className={styles.movieTitle}>
@@ -252,59 +215,8 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
               className={`${styles.additionalDetails} ${
                 isDetailsVisible ? styles.detailsVisible : ''
               }`}
-              // ref={detailsRef}
             >
-              {movieDetails.vote_count > 0 && (
-                <p className={styles.detailItem}>Votes: {movieDetails.vote_count}</p>
-              )}
-              {movieDetails.release_date !== '' && (
-                <p className={styles.detailItem}>Release Date: {movieDetails.release_date}</p>
-              )}
-              {movieDetails.spoken_languages.length > 0 && (
-                <p className={styles.detailItem}>
-                  Spoken Languages:{' '}
-                  {movieDetails.spoken_languages.map((lang) => lang.english_name).join(', ')}
-                </p>
-              )}
-              {movieDetails.budget > 0 && (
-                <p className={styles.detailItem}>Budget: ${movieDetails.budget.toLocaleString()}</p>
-              )}
-              {movieDetails.runtime !== null && movieDetails.runtime > 0 && (
-                <p className={styles.detailItem}>Runtime: {formatRuntime(movieDetails.runtime)}</p>
-              )}
-              {movieDetails.production_countries.length > 0 && (
-                <p className={styles.detailItem}>
-                  Production Countries:{' '}
-                  {movieDetails.production_countries.map((country) => country.name).join(', ')}
-                </p>
-              )}
-              {movieDetails.production_companies.length > 0 && (
-                <p className={styles.detailItem}>
-                  Production Companies:{' '}
-                  {movieDetails.production_companies.map((company) => company.name).join(', ')}
-                </p>
-              )}
-              {movieDetails.imdb_id !== null && (
-                <a
-                  href={`https://www.imdb.com/title/${movieDetails.imdb_id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.imdbLink}
-                >
-                  View on IMDb
-                </a>
-              )}
-              <br />
-              {movieDetails.homepage !== '' && (
-                <a
-                  href={movieDetails.homepage}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.homepageLink}
-                >
-                  Visit Website
-                </a>
-              )}
+              <MovieAdditionalDetails movieDetails={movieDetails} />
             </div>
 
             <div
@@ -312,16 +224,21 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
             >
               {isSimilarLoading ? (
                 <div className={styles.loaderWrapper}>
-                  <Loader /> {/* Loader widoczny podczas ładowania */}
+                  <Loader />
                 </div>
               ) : (
                 <>
+                  <h4 className={styles.similarTitle}>Similar movies:</h4>
+
                   <Gallery movies={visibleSimilarMovies} variant="small" />
-                  <Pagination
-                    currentPage={similarCurrentPage}
-                    totalPages={similarTotalPages}
-                    onPageChange={handlePageChange}
-                  />
+
+                  {similarTotalPages > 1 && (
+                    <Pagination
+                      currentPage={similarCurrentPage}
+                      totalPages={similarTotalPages}
+                      onPageChange={handlePageChange}
+                    />
+                  )}
                 </>
               )}
             </div>
@@ -334,7 +251,7 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
               onAddToWatched={onAddToWatched}
               onRemoveFromWatched={onRemoveFromWatched}
               moveToWatched={moveToWatched}
-              movie={movieDetails} // Przekazuje szczegóły filmu zamiast obiektu Movie
+              movie={movieDetails}
             />
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { MinimalMovie } from './movieTypes';
+import { MinimalMovie, MovieDetails } from './movieTypes';
 
 export type ButtonProps = {
   onClick: () => void;
@@ -29,6 +29,10 @@ export type PaginationProps = {
 export interface MovieModalProps {
   movieId: number;
   onClose: () => void;
+}
+
+export interface MovieAdditionalDetailsProps {
+  movieDetails: MovieDetails;
 }
 
 export interface MovieActionButtonsProps {

@@ -1,0 +1,27 @@
+.detailItem {
+  margin-bottom: 0.5rem;
+
+  &:last-of-type {
+    margin-bottom: 0.2rem;
+  }
+}
+
+.imdbLink,
+.homepageLink {
+  font-size: 0.75rem;
+  color: var(--primary-color);
+  text-decoration: none;
+  line-height: 2;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  @include breakpoint('tablet') {
+    font-size: 0.875rem;
+  }
+
+  @include breakpoint('desktop') {
+    font-size: 1rem;
+  }
+}

@@ -43,7 +43,7 @@ const Gallery: React.FC<GalleryProps> = ({ movies, variant = 'standard' }) => {
                     <div className={styles.loaderWrapper}>
                       <Loader />
                     </div>
-                  } // Załadowanie komponentu Loader
+                  }
                 />
               </div>
               <h3>{movie.title}</h3>

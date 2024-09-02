@@ -17,7 +17,7 @@ const SearchForm: React.FC = () => {
   useEffect(() => {
     const urlQuery = searchParams.get('query') || '';
     setQuery(urlQuery);
-    setLocalQuery(urlQuery); // Synchronizuj lokalny stan z aktualnym stanem globalnym
+    setLocalQuery(urlQuery);
   }, [searchParams, setQuery]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -28,18 +28,13 @@ const SearchForm: React.FC = () => {
     }
 
     setQuery(localQuery);
-    setCategory('search'); // Ustawienie kategorii na "search"
+    setCategory('search');
     setSearchParams({ query: localQuery });
   };
 
   return (
     <div className={styles.searchForm}>
-      <form
-        className={styles.form}
-        autoComplete="off"
-        id="home"
-        onSubmit={handleSubmit}
-      >
+      <form className={styles.form} autoComplete="off" id="home" onSubmit={handleSubmit}>
         <label className={styles.formLabel}>
           <input
             type="text"

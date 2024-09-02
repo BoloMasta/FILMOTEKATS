@@ -1,6 +1,6 @@
-import Button from "../Button/Button";
-import styles from "./MovieActionButtons.module.scss";
-import { MovieActionButtonsProps } from "../../ts/types/componentProps";
+import Button from '../Button/Button';
+import styles from './MovieActionButtons.module.scss';
+import { MovieActionButtonsProps } from '../../ts/types/componentProps';
 
 const MovieActionButtons: React.FC<MovieActionButtonsProps> = ({
   inQueue,
@@ -15,7 +15,7 @@ const MovieActionButtons: React.FC<MovieActionButtonsProps> = ({
   <div className={styles.buttonContainer}>
     <Button
       onClick={inQueue ? () => onRemoveFromQueue(movie) : () => onAddToQueue(movie)}
-      label={inQueue ? "Remove from Queue" : "Add to Queue"}
+      label={inQueue ? 'Remove from Queue' : 'Add to Queue'}
       variant="primary"
     />
     {inQueue ? (

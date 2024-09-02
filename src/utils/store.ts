@@ -23,16 +23,12 @@ interface Store {
   setView: (view: 'queue' | 'watched' | null) => void;
   setPage: (page: number) => void;
   loadMovies: () => void;
-  // addToQueue: (movie: MinimalMovie) => void;
-  // addToWatched: (movie: MinimalMovie) => void;
-  // removeFromQueue: (movie: MinimalMovie) => void;
-  // removeFromWatched: (movie: MinimalMovie) => void;
   toggleQueueStatus: (movie: MinimalMovie, add: boolean) => void;
   toggleWatchedStatus: (movie: MinimalMovie, add: boolean) => void;
-  // isMovieInQueue: (movie: MinimalMovie) => boolean;
-  // isMovieInWatched: (movie: MinimalMovie) => boolean;
   isMovieInList: (movie: MinimalMovie, listType: 'queue' | 'watched') => boolean;
 }
+
+const ITEMS_PER_PAGE = 20;
 
 export const useStore = create<Store>((set, get) => ({
   adults: false,
@@ -43,24 +39,32 @@ export const useStore = create<Store>((set, get) => ({
   category: 'popular',
   query: '',
 
-  setAdults: (adults: boolean) => {
-    set({ adults });
-  },
+  setAdults: (adults: boolean) => set({ adults }),
 
-  setView: (view) => {
+  setView: (view: 'queue' | 'watched' | null) => {
     set({ view, currentPage: 1 });
     get().loadMovies();
   },
 
-  setPage: (page) => {
+  setPage: (page: number) => {
     set({ currentPage: page });
     get().loadMovies();
   },
 
   loadMovies: () => {
     const { view, currentPage } = get();
-    const movies = view === 'queue' ? getQueue() : getWatched();
-    const ITEMS_PER_PAGE = 20;
+    let movies: MinimalMovie[] = [];
+
+    switch (view) {
+      case 'queue':
+        movies = getQueue();
+        break;
+      case 'watched':
+        movies = getWatched();
+        break;
+      default:
+        movies = [];
+    }
 
     set({
       movies: movies.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE),
@@ -68,53 +72,29 @@ export const useStore = create<Store>((set, get) => ({
     });
   },
 
-  setCategory: (category) => {
-    set({ category });
-  },
+  setCategory: (category: 'popular' | 'top_rated' | 'upcoming' | 'search') => set({ category }),
 
-  setQuery: (query) => {
-    set({ query });
-  },
+  setQuery: (query: string) => set({ query }),
 
-  // addToQueue: (movie) => {
-  //   addToQueue(movie);
-  //   get().loadMovies(); // Refresh the movies list
-  // },
-
-  // addToWatched: (movie) => {
-  //   addToWatched(movie);
-  //   get().loadMovies(); // Refresh the movies list
-  // },
-
-  // removeFromQueue: (movie) => {
-  //   removeFromQueue(movie);
-  //   get().loadMovies(); // Refresh the movies list
-  // },
-
-  // removeFromWatched: (movie) => {
-  //   removeFromWatched(movie);
-  //   get().loadMovies(); // Refresh the movies list
-  // },
-
-  toggleQueueStatus: (movie, add) => {
-    add ? addToQueue(movie) : removeFromQueue(movie);
+  toggleQueueStatus: (movie: MinimalMovie, add: boolean) => {
+    if (add) {
+      addToQueue(movie);
+    } else {
+      removeFromQueue(movie);
+    }
     get().loadMovies();
   },
 
-  toggleWatchedStatus: (movie, add) => {
-    add ? addToWatched(movie) : removeFromWatched(movie);
+  toggleWatchedStatus: (movie: MinimalMovie, add: boolean) => {
+    if (add) {
+      addToWatched(movie);
+    } else {
+      removeFromWatched(movie);
+    }
     get().loadMovies();
   },
 
-  // isMovieInQueue: (movie) => {
-  //   return getQueue().some((m) => m.id === movie.id);
-  // },
-
-  // isMovieInWatched: (movie) => {
-  //   return getWatched().some((m) => m.id === movie.id);
-  // },
-
-  isMovieInList: (movie, listType) => {
+  isMovieInList: (movie: MinimalMovie, listType: 'queue' | 'watched') => {
     const list = listType === 'queue' ? getQueue() : getWatched();
     return list.some((m) => m.id === movie.id);
   },

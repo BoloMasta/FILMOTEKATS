@@ -1,12 +1,12 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom'; // Dodaj import useSearchParams
+import { useSearchParams } from 'react-router-dom';
+import { useStore } from '../utils/store';
 import { FetchApiMovies } from '../ts/api/fetchMovies';
 import { MinimalMovie } from '../ts/types/movieTypes';
 import Gallery from '../components/Gallery/Gallery';
 import Pagination from '../components/Pagination/Pagination';
 import Button from '../components/Button/Button';
 import './pagesStyles.scss';
-import { useStore } from '../utils/store';
 
 const HomePage: React.FC = () => {
   const [movies, setMovies] = useState<MinimalMovie[]>([]);

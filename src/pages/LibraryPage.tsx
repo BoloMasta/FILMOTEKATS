@@ -25,19 +25,16 @@ const LibraryPage: React.FC = () => {
     loadMovies: state.loadMovies,
   }));
 
-  // Efekt do ustawienia widoku na podstawie URL parameter
   useEffect(() => {
     if (view === 'queue' || view === 'watched') {
       setView(view);
     }
   }, [view, setView]);
 
-  // Efekt do ładowania filmów na podstawie aktualnego widoku i strony
   useEffect(() => {
     loadMovies();
   }, [currentView, currentPage, loadMovies]);
 
-  // Obsługuje zmianę strony
   const handlePageChange = (page: number) => {
     setPage(page);
   };

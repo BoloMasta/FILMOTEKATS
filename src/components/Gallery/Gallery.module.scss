@@ -50,20 +50,20 @@
   min-height: 250px;
 
   .imageWrapper {
-    height: 225px; // Wysokość dostosowana do większych kart
+    height: 225px;
   }
 }
 
 .movieItemSmall {
-  width: 130px; // Mniejsze karty
+  width: 130px;
   min-height: 220px;
 
   .imageWrapper {
-    height: 195px; // Wysokość dostosowana do mniejszych kart
+    height: 195px;
   }
 
   h3 {
-    padding: 0.3rem; // Mniejsze nagłówki
+    padding: 0.3rem;
     font-size: 0.8rem;
   }
 }
@@ -73,7 +73,7 @@
   height: 100%;
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Obrazek będzie wyrównany do góry */
+  align-items: flex-start;
   position: relative;
 }
 
