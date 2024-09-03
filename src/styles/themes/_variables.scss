@@ -9,6 +9,7 @@ $breakpoints: (
 $light-background: #ffffff;
 $light-text: #000000;
 $light-primary: #1a73e8;
+$light-primary-shadow: #1a73e871;
 $light-secondary: #fbbc05;
 $light-tertiary: #e0e0e0;
 $light-header-text: #ffffff;
@@ -26,6 +27,7 @@ $light-modal-button-disabled: #b2afad;
 $dark-background: #121212;
 $dark-text: #ffffff;
 $dark-primary: #bb86fc;
+$dark-primary-shadow: #bb86fc69;
 $dark-secondary: #03dac6;
 $dark-tertiary: #333333;
 $dark-header-text: #ffffff;
@@ -43,6 +45,7 @@ $dark-modal-button-disabled: #555555;
   --background: #{$light-background};
   --text-color: #{$light-text};
   --primary-color: #{$light-primary};
+  --primary-color-shadow: #{$light-primary-shadow};
   --secondary-color: #{$light-secondary};
   --tertiary-color: #{$light-tertiary};
   --header-text: #{$light-header-text};
@@ -57,10 +60,11 @@ $dark-modal-button-disabled: #555555;
   --modal-button-disabled: #{$light-modal-button-disabled};
 }
 
-[data-theme="dark"] {
+[data-theme='dark'] {
   --background: #{$dark-background};
   --text-color: #{$dark-text};
   --primary-color: #{$dark-primary};
+  --primary-color-shadow: #{$dark-primary-shadow};
   --secondary-color: #{$dark-secondary};
   --tertiary-color: #{$dark-tertiary};
   --header-text: #{$dark-header-text};

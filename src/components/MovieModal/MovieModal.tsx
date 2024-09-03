@@ -25,7 +25,12 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
   const [isSimilarVisible, setIsSimilarVisible] = useState<boolean>(false);
   const [isSimilarLoading, setIsSimilarLoading] = useState<boolean>(true);
   const [images, setImages] = useState<Image[]>([]);
+  const [visibleimages, setVisibleImages] = useState<Image[]>([]);
   const [isImagesVisible, setIsImagesVisible] = useState<boolean>(false);
+  const [imagesCurrentPage, setImagesCurrentPage] = useState<number>(1);
+  const [imagesTotalPages, setImagesTotalPages] = useState<number>(0);
+  const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const { toggleQueueStatus, toggleWatchedStatus, isMovieInList } = useStore((state) => ({
     toggleQueueStatus: state.toggleQueueStatus,
@@ -85,35 +90,55 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
   }, [similarCurrentPage, similarMovies, isSimilarVisible]);
 
   useEffect(() => {
+    const startIndex = (imagesCurrentPage - 1) * 6;
+    const endIndex = imagesCurrentPage * 6;
+    setVisibleImages(images.slice(startIndex, endIndex));
+  }, [imagesCurrentPage, images, isImagesVisible]);
+
+  useEffect(() => {
     if (isSimilarVisible) {
       fetchSimilarMovies(movieId);
     }
   }, [isSimilarVisible, fetchSimilarMovies, movieId]);
 
-  const fetchImages = useCallback(
-    async (movieId: number) => {
-      const api = new FetchApiMovies();
+  const fetchImages = useCallback(async (movieId: number) => {
+    const api = new FetchApiMovies();
 
-      try {
-        const data = await api.getImages(movieId);
-        console.log(data);
-        if (data && data.backdrops && data.backdrops.length > 0) {
-          setImages(data.backdrops);
-        }
-      } catch (error) {
-        console.error('Failed to fetch movie images:', error);
-      } finally {
-        console.log('Images fetched', images);
+    try {
+      const data = await api.getImages(movieId);
+
+      if (data && data.backdrops) {
+        const backdrops = data.backdrops;
+        const limitedResults = backdrops.slice(0, 6);
+        const totalImages = backdrops.length;
+        const maxPages = Math.ceil(totalImages / 6);
+
+        setImages(limitedResults);
+        setImagesTotalPages(maxPages);
+
+        return backdrops;
+      } else {
+        setImages([]);
+        setImagesTotalPages(0);
+        return [];
       }
-    },
-    [images]
-  );
+    } catch (error) {
+      console.error('Failed to fetch movie images:', error);
+      setImages([]);
+      setImagesTotalPages(0);
+      return [];
+    }
+  }, []);
 
   useEffect(() => {
     if (isImagesVisible) {
-      fetchImages(movieId);
+      fetchImages(movieId).then((fetchedImages) => {
+        if (fetchedImages.length > 0) {
+          setImages(fetchedImages);
+        }
+      });
     }
-  }, [isImagesVisible]);
+  }, [isImagesVisible, fetchImages, movieId]);
 
   const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (event.target === event.currentTarget) {
@@ -136,10 +161,10 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
   const toggleDetailsVisibility = () => {
     setIsDetailsVisible((prev) => {
       if (prev) {
-        setIsSimilarVisible(false);
         return false;
       } else {
         setIsSimilarVisible(false);
+        setIsImagesVisible(false);
         return true;
       }
     });
@@ -148,17 +173,25 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
   const toggleSimilarVisibility = () => {
     setIsSimilarVisible((prev) => {
       if (prev) {
-        setIsDetailsVisible(false);
         return false;
       } else {
         setIsDetailsVisible(false);
+        setIsImagesVisible(false);
         return true;
       }
     });
   };
 
-  const toogleImagesVisibility = () => {
-    setIsImagesVisible((prev) => !prev);
+  const toggleImagesVisibility = () => {
+    setIsImagesVisible((prev) => {
+      if (prev) {
+        return false;
+      } else {
+        setIsDetailsVisible(false);
+        setIsSimilarVisible(false);
+        return true;
+      }
+    });
   };
 
   const onAddToQueue = useCallback(() => {
@@ -198,8 +231,22 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
     }
   }, [movieDetails, toggleQueueStatus, toggleWatchedStatus]);
 
-  const handlePageChange = (page: number) => {
+  const handleSimilarPageChange = (page: number) => {
     setSimilarCurrentPage(page);
+  };
+
+  const handleImagesPageChange = (page: number) => {
+    setImagesCurrentPage(page);
+  };
+
+  const handleImageClick = (imagePath: string | null) => {
+    setSelectedImage(imagePath);
+    setIsOverlayVisible(true);
+  };
+
+  const handleCloseOverlay = () => {
+    setIsOverlayVisible(false);
+    setSelectedImage(null);
   };
 
   if (!movieDetails) return null;
@@ -220,6 +267,7 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
               }
               alt={movieDetails.title}
               className={styles.moviePoster}
+              onClick={() => handleImageClick(movieDetails.poster_path)}
               loader={
                 <div className={styles.loaderWrapper}>
                   <Loader />
@@ -265,7 +313,7 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
                 className={styles.moreInfoButton}
               />
               <Button
-                onClick={toogleImagesVisibility}
+                onClick={toggleImagesVisibility}
                 label={isImagesVisible ? 'Hide images' : 'Show images'}
                 variant={isImagesVisible ? 'secondary' : 'tertiary'}
                 className={styles.moreInfoButton}
@@ -289,7 +337,7 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
                 </div>
               ) : (
                 <>
-                  <h4 className={styles.similarTitle}>Similar movies:</h4>
+                  <h4>Similar movies:</h4>
 
                   <Gallery movies={visibleSimilarMovies} variant="small" />
 
@@ -297,12 +345,54 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
                     <Pagination
                       currentPage={similarCurrentPage}
                       totalPages={similarTotalPages}
-                      onPageChange={handlePageChange}
+                      onPageChange={handleSimilarPageChange}
                     />
                   )}
                 </>
               )}
             </div>
+
+            <div className={`${styles.images} ${isImagesVisible ? styles.imagesVisible : ''}`}>
+              <h4 className={styles.imagesTitle}>Images:</h4>
+              {visibleimages.length > 0 ? (
+                <>
+                  {visibleimages.map((image) => (
+                    <Img
+                      key={image.file_path}
+                      src={`https://image.tmdb.org/t/p/w500${image.file_path}`}
+                      alt="Movie image"
+                      className={styles.image}
+                      onClick={() => handleImageClick(image.file_path)}
+                      loader={
+                        <div className={styles.loaderWrapper}>
+                          <Loader />
+                        </div>
+                      }
+                    />
+                  ))}
+                </>
+              ) : (
+                <p style={{ margin: '3px' }}>No images available.</p>
+              )}
+            </div>
+
+            {isOverlayVisible && selectedImage && (
+              <div className={styles.overlay} onClick={handleCloseOverlay}>
+                <img
+                  src={`https://image.tmdb.org/t/p/original${selectedImage}`}
+                  alt="Expanded movie image"
+                  className={styles.overlayImage}
+                />
+              </div>
+            )}
+
+            {isImagesVisible && imagesTotalPages > 1 && (
+              <Pagination
+                currentPage={imagesCurrentPage}
+                totalPages={imagesTotalPages}
+                onPageChange={handleImagesPageChange}
+              />
+            )}
 
             <MovieActionButtons
               inQueue={inQueue}
