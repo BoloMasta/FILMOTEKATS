@@ -15,6 +15,16 @@ const MovieAdditionalDetails: React.FC<MovieAdditionalDetailsProps> = ({ movieDe
 
   return (
     <>
+      {!movieDetails.vote_count &&
+        !movieDetails.release_date &&
+        !movieDetails.spoken_languages.length &&
+        !movieDetails.budget &&
+        !movieDetails.runtime &&
+        !movieDetails.production_countries.length &&
+        !movieDetails.production_companies.length &&
+        !movieDetails.imdb_id &&
+        !movieDetails.homepage && <p>No additional details available for this movie.</p>}
+
       {movieDetails.vote_count > 0 && (
         <p className={styles.detailItem}>Votes: {movieDetails.vote_count}</p>
       )}

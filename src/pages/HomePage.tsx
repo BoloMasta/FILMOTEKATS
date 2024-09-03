@@ -65,7 +65,10 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     fetchMovies(currentPage, category, query);
-  }, [currentPage, category, query, fetchMovies, adults]);
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, category, query, fetchMovies, adults, totalPages]);
 
   const handlePageChange = (page: number) => {
     console.log(`Page change: new page=${page}`);
