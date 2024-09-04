@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 import SVG from 'react-inlinesvg';
-import { useSearchParams } from 'react-router-dom';
 import styles from './SearchForm.module.scss';
 import { useStore } from '../../utils/store';
 
 const SearchForm: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
   const { query, setQuery, setCategory } = useStore((state) => ({
     query: state.query,
     setQuery: state.setQuery,
@@ -15,10 +13,8 @@ const SearchForm: React.FC = () => {
   const [localQuery, setLocalQuery] = useState(query);
 
   useEffect(() => {
-    const urlQuery = searchParams.get('query') || '';
-    setQuery(urlQuery);
-    setLocalQuery(urlQuery);
-  }, [searchParams, setQuery]);
+    setLocalQuery(query);
+  }, [query]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -29,7 +25,6 @@ const SearchForm: React.FC = () => {
 
     setQuery(localQuery);
     setCategory('search');
-    setSearchParams({ query: localQuery });
   };
 
   return (

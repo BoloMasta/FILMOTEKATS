@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Navigate } from 'react-router-dom';
 import { useStore } from '../utils/store';
 import Gallery from '../components/Gallery/Gallery';
 import Pagination from '../components/Pagination/Pagination';
 import './pagesStyles.scss';
+
+const validViews: Array<'queue' | 'watched'> = ['queue', 'watched'];
 
 const LibraryPage: React.FC = () => {
   const { view } = useParams<{ view?: string }>();
@@ -26,14 +28,20 @@ const LibraryPage: React.FC = () => {
   }));
 
   useEffect(() => {
-    if (view === 'queue' || view === 'watched') {
-      setView(view);
+    if (view && !validViews.includes(view as 'queue' | 'watched')) {
+      setView('queue');
+    } else if (view) {
+      setView(view as 'queue' | 'watched');
     }
   }, [view, setView]);
 
   useEffect(() => {
     loadMovies();
   }, [currentView, currentPage, loadMovies]);
+
+  if (view && !validViews.includes(view as 'queue' | 'watched')) {
+    return <Navigate to="/FILMOTEKATS/library/queue" />;
+  }
 
   const handlePageChange = (page: number) => {
     setPage(page);

@@ -1,5 +1,4 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { useStore } from '../utils/store';
 import { FetchApiMovies } from '../ts/api/fetchMovies';
 import { MinimalMovie } from '../ts/types/movieTypes';
@@ -10,10 +9,7 @@ import './pagesStyles.scss';
 
 const HomePage: React.FC = () => {
   const [movies, setMovies] = useState<MinimalMovie[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(0);
-
-  const [searchParams, setSearchParams] = useSearchParams(); // Użyj useSearchParams
+  const [totalPages, setTotalPages] = useState<number>(1);
 
   const { category, query, setCategory, setQuery, adults } = useStore((state) => ({
     category: state.category,
@@ -22,6 +18,16 @@ const HomePage: React.FC = () => {
     setQuery: state.setQuery,
     adults: state.adults,
   }));
+
+  const [fetchParams, setFetchParams] = useState<{
+    page: number;
+    category: 'popular' | 'top_rated' | 'upcoming' | 'search';
+    query?: string;
+  }>({
+    page: 1,
+    category: category,
+    query: query,
+  });
 
   const fetchMovies = useCallback(
     async (
@@ -64,26 +70,28 @@ const HomePage: React.FC = () => {
   );
 
   useEffect(() => {
-    fetchMovies(currentPage, category, query);
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [currentPage, category, query, fetchMovies, adults, totalPages]);
+    fetchMovies(fetchParams.page, fetchParams.category, fetchParams.query);
+  }, [fetchParams, fetchMovies]);
+
+  useEffect(() => {
+    setFetchParams({
+      page: 1,
+      category: category,
+      query: query,
+    });
+  }, [category, query, adults]);
 
   const handlePageChange = (page: number) => {
-    console.log(`Page change: new page=${page}`);
-    setCurrentPage(page);
+    setFetchParams((prev) => ({
+      ...prev,
+      page: page,
+    }));
   };
 
   const handleCategoryChange = (newCategory: 'popular' | 'top_rated' | 'upcoming' | 'search') => {
-    setCurrentPage(1);
-
     if (newCategory !== 'search') {
-      setQuery(''); // Wyczyść query
-      searchParams.delete('query'); // Usuń query z URL-a
-      setSearchParams(searchParams); // Zaktualizuj URL
+      setQuery('');
     }
-
     setCategory(newCategory);
     console.log(`Category change: new category=${newCategory}`);
   };
@@ -124,7 +132,7 @@ const HomePage: React.FC = () => {
 
       {totalPages > 1 && (
         <Pagination
-          currentPage={currentPage}
+          currentPage={fetchParams.page}
           totalPages={totalPages}
           onPageChange={handlePageChange}
         />
