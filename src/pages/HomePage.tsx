@@ -35,7 +35,6 @@ const HomePage: React.FC = () => {
       category: 'popular' | 'top_rated' | 'upcoming' | 'search',
       query?: string
     ) => {
-      console.log(`Fetching movies for category: ${category}, page: ${page}, query: "${query}"`);
       const api = new FetchApiMovies();
       let data;
 
@@ -60,7 +59,6 @@ const HomePage: React.FC = () => {
           const maxPages = Math.min(data.total_pages, 500);
           setMovies(data.results);
           setTotalPages(maxPages);
-          console.log(`Movies fetched: ${data.results.length} movies, totalPages: ${maxPages}`);
         }
       } catch (error) {
         console.error('Error fetching movies:', error);
@@ -93,7 +91,6 @@ const HomePage: React.FC = () => {
       setQuery('');
     }
     setCategory(newCategory);
-    console.log(`Category change: new category=${newCategory}`);
   };
 
   return (

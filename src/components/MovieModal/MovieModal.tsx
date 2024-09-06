@@ -75,8 +75,6 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
 
         setSimilarMovies(limitedResults);
         setSimilarTotalPages(maxPages);
-
-        console.log(`Fetched ${totalMovies} similar movies.`);
       }
     } catch (error) {
       console.error('Failed to fetch similar movies:', error);
@@ -149,14 +147,19 @@ const MovieModal: React.FC<MovieModalProps> = ({ movieId, onClose }) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        onClose();
+        if (selectedImage) {
+          setSelectedImage(null);
+        } else {
+          onClose();
+        }
       }
     };
+
     document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [onClose]);
+  }, [selectedImage, onClose]);
 
   const toggleDetailsVisibility = () => {
     setIsDetailsVisible((prev) => {
